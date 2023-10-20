@@ -153,34 +153,34 @@
                 <enum>Qt::Vertical</enum>
                </property>
               </widget>
-              <widget class="QWidget" name="">
+              <widget class="QWidget" name="layoutWidget">
                <layout class="QGridLayout" name="gridLayout_7">
                 <property name="sizeConstraint">
                  <enum>QLayout::SetMinimumSize</enum>
                 </property>
                 <item row="0" column="0">
-                 <widget class="QRadioButton" name="radioButton">
+                 <widget class="QRadioButton" name="sin_radioButton">
                   <property name="text">
                    <string>Sine</string>
                   </property>
                  </widget>
                 </item>
                 <item row="0" column="1">
-                 <widget class="QRadioButton" name="radioButton_2">
+                 <widget class="QRadioButton" name="cos_radioButton">
                   <property name="text">
                    <string>Cosine</string>
                   </property>
                  </widget>
                 </item>
                 <item row="1" column="0">
-                 <widget class="QLineEdit" name="lineEdit_4">
+                 <widget class="QLineEdit" name="name_lineEdit">
                   <property name="placeholderText">
                    <string>Signal Name</string>
                   </property>
                  </widget>
                 </item>
                 <item row="1" column="1">
-                 <widget class="QLineEdit" name="lineEdit">
+                 <widget class="QLineEdit" name="mag_lineEdit">
                   <property name="toolTip">
                    <string/>
                   </property>
@@ -190,28 +190,28 @@
                  </widget>
                 </item>
                 <item row="2" column="0">
-                 <widget class="QLineEdit" name="lineEdit_2">
+                 <widget class="QLineEdit" name="freq_lineEdit">
                   <property name="placeholderText">
                    <string>Frequency</string>
                   </property>
                  </widget>
                 </item>
                 <item row="2" column="1">
-                 <widget class="QLineEdit" name="lineEdit_3">
+                 <widget class="QLineEdit" name="phase_lineEdit">
                   <property name="placeholderText">
                    <string>Phase Shift</string>
                   </property>
                  </widget>
                 </item>
                 <item row="3" column="0">
-                 <widget class="QPushButton" name="pushButton_3">
+                 <widget class="QPushButton" name="showsignal_pushButton">
                   <property name="text">
                    <string>Show Signal</string>
                   </property>
                  </widget>
                 </item>
                 <item row="3" column="1">
-                 <widget class="QPushButton" name="pushButton_4">
+                 <widget class="QPushButton" name="addtosum_pushButton">
                   <property name="text">
                    <string>Add to Sum</string>
                   </property>
@@ -296,7 +296,7 @@
      <x>0</x>
      <y>0</y>
      <width>1133</width>
-     <height>26</height>
+     <height>22</height>
     </rect>
    </property>
   </widget>
