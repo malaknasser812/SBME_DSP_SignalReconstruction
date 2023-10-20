@@ -1,0 +1,307 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>MainWindow</class>
+ <widget class="QMainWindow" name="MainWindow">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>1133</width>
+    <height>843</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>MainWindow</string>
+  </property>
+  <widget class="QWidget" name="centralwidget">
+   <layout class="QGridLayout" name="gridLayout">
+    <item row="0" column="1">
+     <widget class="QTabWidget" name="tabWidget">
+      <property name="currentIndex">
+       <number>1</number>
+      </property>
+      <widget class="QWidget" name="tab">
+       <attribute name="title">
+        <string>Sampler</string>
+       </attribute>
+       <layout class="QGridLayout" name="gridLayout_6">
+        <item row="0" column="0">
+         <widget class="QSplitter" name="splitter_9">
+          <property name="orientation">
+           <enum>Qt::Horizontal</enum>
+          </property>
+          <widget class="QGroupBox" name="groupBox_2">
+           <property name="title">
+            <string>Graphs</string>
+           </property>
+           <layout class="QGridLayout" name="gridLayout_3">
+            <property name="sizeConstraint">
+             <enum>QLayout::SetMaximumSize</enum>
+            </property>
+            <item row="0" column="0">
+             <widget class="QSplitter" name="splitter_7">
+              <property name="orientation">
+               <enum>Qt::Vertical</enum>
+              </property>
+              <widget class="QGraphicsView" name="graphicsView"/>
+              <widget class="QGraphicsView" name="graphicsView_2"/>
+              <widget class="QGraphicsView" name="graphicsView_3"/>
+             </widget>
+            </item>
+           </layout>
+          </widget>
+          <widget class="QGroupBox" name="groupBox">
+           <property name="title">
+            <string>Controls</string>
+           </property>
+           <layout class="QGridLayout" name="gridLayout_2">
+            <property name="sizeConstraint">
+             <enum>QLayout::SetMinimumSize</enum>
+            </property>
+            <item row="0" column="0">
+             <widget class="QSplitter" name="splitter_5">
+              <property name="orientation">
+               <enum>Qt::Vertical</enum>
+              </property>
+              <widget class="QPushButton" name="pushButton">
+               <property name="text">
+                <string>Load </string>
+               </property>
+              </widget>
+              <widget class="QSplitter" name="splitter_3">
+               <property name="orientation">
+                <enum>Qt::Vertical</enum>
+               </property>
+               <widget class="QCheckBox" name="checkBox">
+                <property name="text">
+                 <string>Add Noise</string>
+                </property>
+               </widget>
+               <widget class="QSplitter" name="splitter">
+                <property name="orientation">
+                 <enum>Qt::Vertical</enum>
+                </property>
+                <widget class="QLabel" name="label">
+                 <property name="text">
+                  <string>SNR (dB)</string>
+                 </property>
+                </widget>
+                <widget class="QSlider" name="horizontalSlider">
+                 <property name="orientation">
+                  <enum>Qt::Horizontal</enum>
+                 </property>
+                </widget>
+               </widget>
+              </widget>
+              <widget class="QSplitter" name="splitter_4">
+               <property name="orientation">
+                <enum>Qt::Vertical</enum>
+               </property>
+               <widget class="QLabel" name="label_2">
+                <property name="text">
+                 <string>Sampling &amp; Reconstruction</string>
+                </property>
+               </widget>
+               <widget class="QSplitter" name="splitter_2">
+                <property name="orientation">
+                 <enum>Qt::Vertical</enum>
+                </property>
+                <widget class="QLabel" name="label_3">
+                 <property name="text">
+                  <string>Sample Rate(Hz)</string>
+                 </property>
+                </widget>
+                <widget class="QComboBox" name="comboBox"/>
+               </widget>
+              </widget>
+              <widget class="QSlider" name="horizontalSlider_2">
+               <property name="orientation">
+                <enum>Qt::Horizontal</enum>
+               </property>
+              </widget>
+             </widget>
+            </item>
+           </layout>
+          </widget>
+         </widget>
+        </item>
+       </layout>
+      </widget>
+      <widget class="QWidget" name="tab_2">
+       <attribute name="title">
+        <string>Composer</string>
+       </attribute>
+       <layout class="QGridLayout" name="gridLayout_10">
+        <item row="0" column="0">
+         <widget class="QSplitter" name="splitter_20">
+          <property name="orientation">
+           <enum>Qt::Vertical</enum>
+          </property>
+          <widget class="QGroupBox" name="groupBox_5">
+           <property name="title">
+            <string>Generated Signal</string>
+           </property>
+           <layout class="QGridLayout" name="gridLayout_8">
+            <item row="0" column="0">
+             <widget class="QSplitter" name="splitter_10">
+              <property name="orientation">
+               <enum>Qt::Horizontal</enum>
+              </property>
+              <widget class="QGraphicsView" name="graphicsView_7"/>
+              <widget class="Line" name="line">
+               <property name="orientation">
+                <enum>Qt::Vertical</enum>
+               </property>
+              </widget>
+              <widget class="QWidget" name="">
+               <layout class="QGridLayout" name="gridLayout_7">
+                <property name="sizeConstraint">
+                 <enum>QLayout::SetMinimumSize</enum>
+                </property>
+                <item row="0" column="0">
+                 <widget class="QRadioButton" name="radioButton">
+                  <property name="text">
+                   <string>Sine</string>
+                  </property>
+                 </widget>
+                </item>
+                <item row="0" column="1">
+                 <widget class="QRadioButton" name="radioButton_2">
+                  <property name="text">
+                   <string>Cosine</string>
+                  </property>
+                 </widget>
+                </item>
+                <item row="1" column="0">
+                 <widget class="QLineEdit" name="lineEdit_4">
+                  <property name="placeholderText">
+                   <string>Signal Name</string>
+                  </property>
+                 </widget>
+                </item>
+                <item row="1" column="1">
+                 <widget class="QLineEdit" name="lineEdit">
+                  <property name="toolTip">
+                   <string/>
+                  </property>
+                  <property name="placeholderText">
+                   <string>Magnitude</string>
+                  </property>
+                 </widget>
+                </item>
+                <item row="2" column="0">
+                 <widget class="QLineEdit" name="lineEdit_2">
+                  <property name="placeholderText">
+                   <string>Frequency</string>
+                  </property>
+                 </widget>
+                </item>
+                <item row="2" column="1">
+                 <widget class="QLineEdit" name="lineEdit_3">
+                  <property name="placeholderText">
+                   <string>Phase Shift</string>
+                  </property>
+                 </widget>
+                </item>
+                <item row="3" column="0">
+                 <widget class="QPushButton" name="pushButton_3">
+                  <property name="text">
+                   <string>Show Signal</string>
+                  </property>
+                 </widget>
+                </item>
+                <item row="3" column="1">
+                 <widget class="QPushButton" name="pushButton_4">
+                  <property name="text">
+                   <string>Add to Sum</string>
+                  </property>
+                 </widget>
+                </item>
+               </layout>
+              </widget>
+             </widget>
+            </item>
+           </layout>
+          </widget>
+          <widget class="QGroupBox" name="groupBox_6">
+           <property name="title">
+            <string>Sum Of Signals</string>
+           </property>
+           <layout class="QGridLayout" name="gridLayout_9">
+            <item row="0" column="0">
+             <widget class="QSplitter" name="splitter_19">
+              <property name="orientation">
+               <enum>Qt::Horizontal</enum>
+              </property>
+              <widget class="QGraphicsView" name="graphicsView_8"/>
+              <widget class="Line" name="line_2">
+               <property name="orientation">
+                <enum>Qt::Vertical</enum>
+               </property>
+              </widget>
+              <widget class="QSplitter" name="splitter_18">
+               <property name="frameShadow">
+                <enum>QFrame::Sunken</enum>
+               </property>
+               <property name="lineWidth">
+                <number>14</number>
+               </property>
+               <property name="orientation">
+                <enum>Qt::Vertical</enum>
+               </property>
+               <property name="handleWidth">
+                <number>8</number>
+               </property>
+               <widget class="QSplitter" name="splitter_17">
+                <property name="orientation">
+                 <enum>Qt::Horizontal</enum>
+                </property>
+                <widget class="QComboBox" name="comboBox_4"/>
+                <widget class="QPushButton" name="pushButton_5">
+                 <property name="text">
+                  <string>Delete</string>
+                 </property>
+                 <property name="autoRepeatDelay">
+                  <number>300</number>
+                 </property>
+                </widget>
+               </widget>
+               <widget class="QPushButton" name="pushButton_6">
+                <property name="text">
+                 <string>Send To Sampler</string>
+                </property>
+                <property name="default">
+                 <bool>false</bool>
+                </property>
+                <property name="flat">
+                 <bool>false</bool>
+                </property>
+               </widget>
+              </widget>
+             </widget>
+            </item>
+           </layout>
+          </widget>
+         </widget>
+        </item>
+       </layout>
+      </widget>
+     </widget>
+    </item>
+   </layout>
+  </widget>
+  <widget class="QMenuBar" name="menubar">
+   <property name="geometry">
+    <rect>
+     <x>0</x>
+     <y>0</y>
+     <width>1133</width>
+     <height>26</height>
+    </rect>
+   </property>
+  </widget>
+  <widget class="QStatusBar" name="statusbar"/>
+ </widget>
+ <resources/>
+ <connections/>
+</ui>
