@@ -30,6 +30,8 @@ class Sin_Signal():
 
 
 
+        self.farah = 0
+    
 class MainWindow(QtWidgets.QMainWindow):
 
     def __init__(self, *args, **kwargs):
