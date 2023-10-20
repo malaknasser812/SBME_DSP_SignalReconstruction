@@ -26,6 +26,7 @@ class Sin_Signal():
         self.phase = None
         self.sinusoidal = 0
         self.hager = 0
+        self.malak = 0
 
 class MainWindow(QtWidgets.QMainWindow):
 
@@ -41,6 +42,7 @@ class MainWindow(QtWidgets.QMainWindow):
 
         #maping each signal with its variables
         self.signaldict = dict()
+        self.signalsum = 0 #sum of the added sin signals
         self.showsignal_btn.clicked.connect(lambda: self.displaySig())
 
 
@@ -63,6 +65,8 @@ class MainWindow(QtWidgets.QMainWindow):
         if self.cos_rbtn.isChecked() == True: 
             #cosine wave will be drawn
             self.phase += 90
+
+
         self.signaldict[signal1.name] = signal1.mag, signal1.freq, signal1.phase
         self.comboBox_4.addItem(signal1.name)
         #computes the representation of the sin wave
@@ -71,7 +75,15 @@ class MainWindow(QtWidgets.QMainWindow):
                         self.layout1, self.sinusoidal)
         
 
-    #def singalPlot(self, graph, ):
+    #def singalPlot(self, graph, sinusoidal):
+        #clear graph
+        #start plotting the sinusoidal wave given
+
+
+    def displaySum(self):
+        self.signalSum += self.sinusoidal
+        self.signalPlot(self.canvas2, self.sinoAdder,
+                        self.layout2, self.signalSum)
 
 
 
