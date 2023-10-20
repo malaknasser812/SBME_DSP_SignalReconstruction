@@ -25,7 +25,7 @@ class Sin_Signal():
         self.freq = None 
         self.phase = None
         self.sinusoidal = 0
-    
+        self.farah = 0
     
 class MainWindow(QtWidgets.QMainWindow):
 
