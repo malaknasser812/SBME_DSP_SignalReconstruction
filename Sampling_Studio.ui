@@ -159,28 +159,28 @@
                  <enum>QLayout::SetMinimumSize</enum>
                 </property>
                 <item row="0" column="0">
-                 <widget class="QRadioButton" name="sin_radioButton">
+                 <widget class="QRadioButton" name="sin_rbtn">
                   <property name="text">
                    <string>Sine</string>
                   </property>
                  </widget>
                 </item>
                 <item row="0" column="1">
-                 <widget class="QRadioButton" name="cos_radioButton">
+                 <widget class="QRadioButton" name="cos_rbtn">
                   <property name="text">
                    <string>Cosine</string>
                   </property>
                  </widget>
                 </item>
                 <item row="1" column="0">
-                 <widget class="QLineEdit" name="name_lineEdit">
+                 <widget class="QLineEdit" name="name_lineE">
                   <property name="placeholderText">
                    <string>Signal Name</string>
                   </property>
                  </widget>
                 </item>
                 <item row="1" column="1">
-                 <widget class="QLineEdit" name="mag_lineEdit">
+                 <widget class="QLineEdit" name="mag_lineE">
                   <property name="toolTip">
                    <string/>
                   </property>
@@ -190,21 +190,21 @@
                  </widget>
                 </item>
                 <item row="2" column="0">
-                 <widget class="QLineEdit" name="freq_lineEdit">
+                 <widget class="QLineEdit" name="freq_lineE">
                   <property name="placeholderText">
                    <string>Frequency</string>
                   </property>
                  </widget>
                 </item>
                 <item row="2" column="1">
-                 <widget class="QLineEdit" name="phase_lineEdit">
+                 <widget class="QLineEdit" name="phase_lineE">
                   <property name="placeholderText">
                    <string>Phase Shift</string>
                   </property>
                  </widget>
                 </item>
                 <item row="3" column="0">
-                 <widget class="QPushButton" name="showsignal_pushButton">
+                 <widget class="QPushButton" name="showsignal_btn">
                   <property name="text">
                    <string>Show Signal</string>
                   </property>
@@ -266,7 +266,7 @@
                  </property>
                 </widget>
                </widget>
-               <widget class="QPushButton" name="pushButton_6">
+               <widget class="QPushButton" name="pushButton7">
                 <property name="text">
                  <string>Send To Sampler</string>
                 </property>
