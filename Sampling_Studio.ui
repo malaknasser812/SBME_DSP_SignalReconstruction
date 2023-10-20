@@ -234,7 +234,7 @@
                <enum>Qt::Horizontal</enum>
               </property>
               <widget class="QGraphicsView" name="graphicsView_8"/>
-              <widget class="Line" name="line_2">
+              <widget class="Line" name="line_3">
                <property name="orientation">
                 <enum>Qt::Vertical</enum>
                </property>
