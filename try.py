@@ -27,8 +27,6 @@ class Sin_Signal():
         self.sinusoidal = 0
     
     
-
-
 class MainWindow(QtWidgets.QMainWindow):
 
     def __init__(self, *args, **kwargs):
