@@ -24,6 +24,8 @@ class Sin_Signal():
         self.mag = mag
         self.freq = freq 
         self.phase = phase
+    
+    
 
 
 class MainWindow(QtWidgets.QMainWindow):
