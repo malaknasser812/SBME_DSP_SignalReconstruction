@@ -47,6 +47,8 @@ class MainWindow(QtWidgets.QMainWindow):
         self.signal = 0
         self.signal_name = ""
 
+        self.loaded = False
+        self.maxFreq =0
         self.graph = pg.PlotItem() 
 
         self.canvas1 = MplCanvas(self, width=5, height=4, dpi=100)
@@ -61,6 +63,13 @@ class MainWindow(QtWidgets.QMainWindow):
         self.layout3 = QtWidgets.QVBoxLayout()
         self.layout3.addWidget(self.canvas3)
 
+        self.canvas4 = MplCanvas(self.recovered_graph,  width=5, height=4, dpi=100)
+        self.layout4 = QtWidgets.QVBoxLayout()
+        self.layout4.addWidget(self.canvas4)
+        
+        self.canvas5 = MplCanvas(self.error_graph,  width=5, height=4, dpi=100)
+        self.layout5 = QtWidgets.QVBoxLayout()
+        self.layout5.addWidget(self.canvas5)
 
         #maping each signal with its variables
         self.signaldict = dict()
@@ -69,11 +78,15 @@ class MainWindow(QtWidgets.QMainWindow):
 
 
         # button connections
-        self.show_signal_pushButton.clicked.connect(lambda: self.show_sin_signal())
+        self.showsignal_pushButton.clicked.connect(lambda: self.show_sin_signal())
         self.addtosum_pushButton.clicked.connect(lambda: self.display_summed_sin_signals())
         self.delete_signal_btn.clicked.connect(lambda: self.remove_sin_signal())
         self.send_sampler_btn.clicked.connect(lambda: self.send_to_sampler())
-
+        self.load_btn.clicked.connect(lambda: self.load())
+        self.sample_rate_comboBox.addItem("Normalized Frequency")
+        self.sample_rate_comboBox.addItem("Actual Frequency")
+        self.sample_rate_comboBox.activated.connect(self.Plot)
+        self.freq_slider.valueChanged.connect(lambda: self.plotHSlide())
 
         self.time = arange(0.0, 1.0, 0.001)
 
@@ -160,10 +173,111 @@ class MainWindow(QtWidgets.QMainWindow):
         self.plot_sin_signal(self.canvas3, self.sampled_graph, self.layout3, self.signal_sum)
 
 
+    def load(self):
+        # Clear the plots in canvas3 , canvas4 and canvas5
+        self.canvas3.axes.clear()
+        self.canvas4.axes.clear()
+        self.canvas5.axes.clear()
 
+        self.fname1 = QFileDialog.getOpenFileName(
+            None, "Select a file...", os.getenv('HOME'), filter="All files (*)")
+        path1 = self.fname1[0]
+        data1 = pd.read_csv(path1)
+        # Extract signal data (Y) and time data (X) from the CSV file
+        self.y_data = data1.values[:, 1]
+        self.x_data = data1.values[:, 0]
+        # Set the value of the horizontal slider initially to its minimum value
+        self.freq_slider.setValue(self.freq_slider.minimum())
+        # If data is already loaded, remove canvas3 and canvas4 from their layouts
+        if self.loaded == True:
+            self.layout3.removeWidget(self.canvas3)
+            self.layout4.removeWidget(self.canvas4)
+            self.layout5.removeWidget(self.canvas5)
 
+        # Filtering
+        FTydata = np.fft.fft(self.y_data)
+        # Keep only the first half of the FFT data (positive frequencies)
+        FTydata = FTydata[0:int(len(self.y_data)/2)]
+        FTydata = abs(FTydata)
+        # Find the maximum amplitude in the FFT data
+        maxamp = max(FTydata)
+        #A noise threshold is defined as 1% of the maximum amp. used to identify significant frequency components above the noise level.
+        noise = (maxamp/100)
+        #finds the indices where the FFT values are significant(more than noise threshold) and not considered noise.
+        self.fmaxtuble = np.where(FTydata > noise)
+        #finds the index with the maximum value which represents the dominant frequency component in the signal
+        self.maxFreq = max(self.fmaxtuble[0])
+        print(self.maxFreq)
+        self.loaded = True
+        self.Plot()
 
+    def Plot(self):
+        selected_option = self.sample_rate_comboBox.currentIndex()
+        #choosing normalized freq. so dependently of fmax
+        if selected_option == 0:
+            self.freq_slider.setMaximum(int(ceil(4*self.maxFreq)))
+        else: #actual freq.
+            self.freq_slider.setMaximum(60)
 
+        # smapling the data and stored in variable contains both the resampled signal and its associated time values.
+        resample_data = sig.resample(
+            self.y_data, self.freq_slider.value(), self.x_data)
+
+        sample_data = resample_data[0]
+        sample_time = resample_data[1]
+        # ensure that the first sample has the same time and value as the original data and that the last sample also matches the original data
+        if len(sample_time) > 0:
+            sample_time[0]=self.x_data[0]
+        sample_data[0]=self.y_data[0]
+        sample_time=np.append(sample_time,[self.x_data[-1]])
+        sample_data=np.append(sample_data,[self.y_data[-1]])
+
+        #interpolatng on the new data 
+        recontructed_data = self.sinc_interp(sample_data, sample_time, self.x_data)
+
+        # Calculate the error between the original signal and the reconstructed signal
+        error = self.y_data - recontructed_data
+        
+        # plotting the original signal and the sampled data as dots 
+        self.canvas3.axes.plot(self.x_data, self.y_data)
+        self.canvas3.axes.scatter(sample_time, sample_data, color='k', s=10)
+        self.canvas3.draw()
+        self.sampled_graph.setCentralItem(self.graph)
+        self.sampled_graph.setLayout(self.layout3)
+
+        # plotting the constructed data on the second graph
+        self.canvas4.axes.plot(self.x_data, recontructed_data, color='r')
+        self.canvas4.draw()
+        self.recovered_graph.setCentralItem(self.graph)
+        self.recovered_graph.setLayout(self.layout4)
+        
+        # plotting the error difference between 2 graphs in 3rd graph
+        self.canvas5.axes.plot(self.x_data, error, color='g')
+        self.canvas5.draw()
+        self.error_graph.setCentralItem(self.graph)
+        self.error_graph.setLayout(self.layout5)
+    
+    def sinc_interp(self, sample_data,sample_time , original_time):
+
+        #It's important that the signal values and the corresponding time values have matching lengths for interpolation to be meaningful 
+        if len(sample_data) != len(sample_time):
+            raise ValueError('sample_data and sample_time must be the same length')
+
+        # Find the period that represents the time or distance between two consecutive samples.
+
+        T = sample_time[1] - sample_time[0]
+        # converting to 2D array In signal processing and interpolation, working with 2D arrays (matrices) often allows for more efficient and vectorized computations
+        sincM = np.tile(original_time, (len(sample_time), 1)) - \
+            np.tile(sample_time[:, np.newaxis], (1, len(original_time)))
+        #calculates a weighted sum of the resampled data x using the sinc function values
+        interpolated_data = np.dot(sample_data, np.sinc(sincM/T))
+        return interpolated_data
+
+    def plotHSlide(self):
+        self.canvas3.axes.clear()
+        self.canvas4.axes.clear()
+        self.canvas5.axes.clear()
+        self.Plot()
 
 def main():
     app = QtWidgets.QApplication(sys.argv)
