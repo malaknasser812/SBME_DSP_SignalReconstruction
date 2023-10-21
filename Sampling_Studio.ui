@@ -509,7 +509,6 @@ QScrollBar::right-arrow:horizontal {
                    <font>
                     <family>Calibri</family>
                     <pointsize>16</pointsize>
-                    <weight>75</weight>
                     <bold>true</bold>
                    </font>
                   </property>
@@ -610,7 +609,6 @@ QScrollBar::right-arrow:horizontal {
                    <font>
                     <family>Calibri</family>
                     <pointsize>14</pointsize>
-                    <weight>75</weight>
                     <bold>true</bold>
                    </font>
                   </property>
@@ -650,7 +648,6 @@ QScrollBar::right-arrow:horizontal {
                    <font>
                     <family>Calibri</family>
                     <pointsize>14</pointsize>
-                    <weight>50</weight>
                     <bold>false</bold>
                    </font>
                   </property>
@@ -704,7 +701,7 @@ QScrollBar::right-arrow:horizontal {
                </layout>
               </item>
               <item row="0" column="0">
-               <widget class="QPushButton" name="pushButton">
+               <widget class="QPushButton" name="load_btn">
                 <property name="minimumSize">
                  <size>
                   <width>300</width>
@@ -719,7 +716,6 @@ QScrollBar::right-arrow:horizontal {
                 </property>
                 <property name="font">
                  <font>
-                  <weight>75</weight>
                   <bold>true</bold>
                  </font>
                 </property>
@@ -813,7 +809,6 @@ color:#34455e;
                     <property name="font">
                      <font>
                       <pointsize>10</pointsize>
-                      <weight>75</weight>
                       <bold>true</bold>
                      </font>
                     </property>
@@ -839,7 +834,6 @@ color:#34455e;
                     <property name="font">
                      <font>
                       <pointsize>10</pointsize>
-                      <weight>75</weight>
                       <bold>true</bold>
                      </font>
                     </property>
@@ -983,7 +977,6 @@ color:#34455e;
                   </property>
                   <property name="font">
                    <font>
-                    <weight>75</weight>
                     <bold>true</bold>
                    </font>
                   </property>
@@ -1026,7 +1019,6 @@ color:#34455e;
                   </property>
                   <property name="font">
                    <font>
-                    <weight>75</weight>
                     <bold>true</bold>
                    </font>
                   </property>
@@ -1103,7 +1095,6 @@ color:#34455e;
                   </property>
                   <property name="font">
                    <font>
-                    <weight>75</weight>
                     <bold>true</bold>
                    </font>
                   </property>
@@ -1146,7 +1137,6 @@ color:#34455e;
                   </property>
                   <property name="font">
                    <font>
-                    <weight>75</weight>
                     <bold>true</bold>
                    </font>
                   </property>
@@ -1196,7 +1186,7 @@ color:#34455e;
      <x>0</x>
      <y>0</y>
      <width>1213</width>
-     <height>26</height>
+     <height>22</height>
     </rect>
    </property>
   </widget>
