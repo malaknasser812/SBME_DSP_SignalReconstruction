@@ -449,7 +449,7 @@ QScrollBar::right-arrow:horizontal {
 </string>
       </property>
       <property name="currentIndex">
-       <number>1</number>
+       <number>0</number>
       </property>
       <widget class="QWidget" name="sampler_tab">
        <attribute name="title">
@@ -494,10 +494,40 @@ QScrollBar::right-arrow:horizontal {
            <layout class="QGridLayout" name="gridLayout_4">
             <item row="0" column="0">
              <layout class="QGridLayout" name="gridLayout_2">
-              <item row="1" column="0">
-               <layout class="QVBoxLayout" name="verticalLayout">
+              <property name="sizeConstraint">
+               <enum>QLayout::SetDefaultConstraint</enum>
+              </property>
+              <item row="3" column="0">
+               <layout class="QVBoxLayout" name="verticalLayout_2">
                 <item>
-                 <widget class="QCheckBox" name="add_noise_checkbox">
+                 <widget class="QLabel" name="label_2">
+                  <property name="minimumSize">
+                   <size>
+                    <width>300</width>
+                    <height>60</height>
+                   </size>
+                  </property>
+                  <property name="maximumSize">
+                   <size>
+                    <width>300</width>
+                    <height>60</height>
+                   </size>
+                  </property>
+                  <property name="font">
+                   <font>
+                    <family>Calibri</family>
+                    <pointsize>16</pointsize>
+                    <weight>75</weight>
+                    <bold>true</bold>
+                   </font>
+                  </property>
+                  <property name="text">
+                   <string>Sampling &amp; Reconstruction</string>
+                  </property>
+                 </widget>
+                </item>
+                <item>
+                 <widget class="QLabel" name="label_3">
                   <property name="minimumSize">
                    <size>
                     <width>300</width>
@@ -508,6 +538,80 @@ QScrollBar::right-arrow:horizontal {
                    <size>
                     <width>300</width>
                     <height>50</height>
+                   </size>
+                  </property>
+                  <property name="font">
+                   <font>
+                    <family>Calibri</family>
+                    <pointsize>14</pointsize>
+                   </font>
+                  </property>
+                  <property name="text">
+                   <string>Sample Rate(Hz)</string>
+                  </property>
+                 </widget>
+                </item>
+                <item>
+                 <widget class="QComboBox" name="sample_rate_comboBox">
+                  <property name="minimumSize">
+                   <size>
+                    <width>300</width>
+                    <height>50</height>
+                   </size>
+                  </property>
+                  <property name="maximumSize">
+                   <size>
+                    <width>300</width>
+                    <height>50</height>
+                   </size>
+                  </property>
+                  <property name="styleSheet">
+                   <string notr="true">border: 2px solid darkgray;</string>
+                  </property>
+                 </widget>
+                </item>
+                <item>
+                 <widget class="QSlider" name="freq_slider">
+                  <property name="minimumSize">
+                   <size>
+                    <width>300</width>
+                    <height>50</height>
+                   </size>
+                  </property>
+                  <property name="maximumSize">
+                   <size>
+                    <width>300</width>
+                    <height>50</height>
+                   </size>
+                  </property>
+                  <property name="styleSheet">
+                   <string notr="true"> QSlider::sub-page {
+    border: 1px transparent;
+    background-color: #34455e; /* Change the background color to #34455e */
+    border-radius: 4px;
+}</string>
+                  </property>
+                  <property name="orientation">
+                   <enum>Qt::Horizontal</enum>
+                  </property>
+                 </widget>
+                </item>
+               </layout>
+              </item>
+              <item row="2" column="0">
+               <layout class="QVBoxLayout" name="verticalLayout">
+                <item>
+                 <widget class="QCheckBox" name="add_noise_checkbox">
+                  <property name="minimumSize">
+                   <size>
+                    <width>300</width>
+                    <height>60</height>
+                   </size>
+                  </property>
+                  <property name="maximumSize">
+                   <size>
+                    <width>300</width>
+                    <height>60</height>
                    </size>
                   </property>
                   <property name="font">
@@ -541,13 +645,13 @@ QScrollBar::right-arrow:horizontal {
                   <property name="minimumSize">
                    <size>
                     <width>300</width>
-                    <height>50</height>
+                    <height>60</height>
                    </size>
                   </property>
                   <property name="maximumSize">
                    <size>
                     <width>300</width>
-                    <height>50</height>
+                    <height>60</height>
                    </size>
                   </property>
                   <property name="font">
@@ -568,176 +672,13 @@ QScrollBar::right-arrow:horizontal {
                   <property name="minimumSize">
                    <size>
                     <width>300</width>
-                    <height>50</height>
+                    <height>60</height>
                    </size>
                   </property>
                   <property name="maximumSize">
                    <size>
-                    <width>16777215</width>
-                    <height>50</height>
-                   </size>
-                  </property>
-                  <property name="styleSheet">
-                   <string notr="true"> QSlider::sub-page {
-    border: 1px transparent;
-    background-color: #34455e; /* Change the background color to #34455e */
-    border-radius: 4px;
-}</string>
-                  </property>
-                  <property name="orientation">
-                   <enum>Qt::Horizontal</enum>
-                  </property>
-                 </widget>
-                </item>
-                <item>
-                 <spacer name="horizontalSpacer_2">
-                  <property name="orientation">
-                   <enum>Qt::Horizontal</enum>
-                  </property>
-                  <property name="sizeType">
-                   <enum>QSizePolicy::Fixed</enum>
-                  </property>
-                  <property name="sizeHint" stdset="0">
-                   <size>
-                    <width>400</width>
-                    <height>50</height>
-                   </size>
-                  </property>
-                 </spacer>
-                </item>
-               </layout>
-              </item>
-              <item row="0" column="0">
-               <widget class="QPushButton" name="pushButton">
-                <property name="minimumSize">
-                 <size>
-                  <width>300</width>
-                  <height>0</height>
-                 </size>
-                </property>
-                <property name="maximumSize">
-                 <size>
-                  <width>500</width>
-                  <height>30</height>
-                 </size>
-                </property>
-                <property name="font">
-                 <font>
-                  <weight>75</weight>
-                  <bold>true</bold>
-                 </font>
-                </property>
-                <property name="styleSheet">
-                 <string notr="true">
-QPushButton {
-background :#34455e;
-border-radius: 10px;
-color: white;
-}
-
-QPushButton:hover {
-    background-color: white;
-    border: 2px solid #475c7a; 
-    cursor: pointer; 
-
-border-radius: 10px ; 
-color:#34455e;
-}</string>
-                </property>
-                <property name="text">
-                 <string>Load </string>
-                </property>
-               </widget>
-              </item>
-              <item row="3" column="0">
-               <layout class="QVBoxLayout" name="verticalLayout_2">
-                <item>
-                 <widget class="QLabel" name="label_2">
-                  <property name="minimumSize">
-                   <size>
-                    <width>0</width>
-                    <height>50</height>
-                   </size>
-                  </property>
-                  <property name="maximumSize">
-                   <size>
-                    <width>16777215</width>
-                    <height>50</height>
-                   </size>
-                  </property>
-                  <property name="font">
-                   <font>
-                    <family>Calibri</family>
-                    <pointsize>16</pointsize>
-                    <weight>75</weight>
-                    <bold>true</bold>
-                   </font>
-                  </property>
-                  <property name="text">
-                   <string>Sampling &amp; Reconstruction</string>
-                  </property>
-                 </widget>
-                </item>
-                <item>
-                 <widget class="QLabel" name="label_3">
-                  <property name="maximumSize">
-                   <size>
-                    <width>16777215</width>
-                    <height>50</height>
-                   </size>
-                  </property>
-                  <property name="font">
-                   <font>
-                    <family>Calibri</family>
-                    <pointsize>14</pointsize>
-                   </font>
-                  </property>
-                  <property name="text">
-                   <string>Sample Rate(Hz)</string>
-                  </property>
-                 </widget>
-                </item>
-                <item>
-                 <widget class="QComboBox" name="sample_rate_comboBox">
-                  <property name="maximumSize">
-                   <size>
-                    <width>16777215</width>
-                    <height>30</height>
-                   </size>
-                  </property>
-                  <property name="styleSheet">
-                   <string notr="true">border: 2px solid darkgray;</string>
-                  </property>
-                 </widget>
-                </item>
-                <item>
-                 <spacer name="verticalSpacer">
-                  <property name="orientation">
-                   <enum>Qt::Vertical</enum>
-                  </property>
-                  <property name="sizeType">
-                   <enum>QSizePolicy::Fixed</enum>
-                  </property>
-                  <property name="sizeHint" stdset="0">
-                   <size>
-                    <width>20</width>
-                    <height>40</height>
-                   </size>
-                  </property>
-                 </spacer>
-                </item>
-                <item>
-                 <widget class="QSlider" name="freq_slider">
-                  <property name="minimumSize">
-                   <size>
-                    <width>0</width>
-                    <height>50</height>
-                   </size>
-                  </property>
-                  <property name="maximumSize">
-                   <size>
-                    <width>16777215</width>
-                    <height>30</height>
+                    <width>300</width>
+                    <height>60</height>
                    </size>
                   </property>
                   <property name="styleSheet">
@@ -769,6 +710,64 @@ color:#34455e;
                  </spacer>
                 </item>
                </layout>
+              </item>
+              <item row="0" column="0">
+               <widget class="QPushButton" name="pushButton">
+                <property name="minimumSize">
+                 <size>
+                  <width>300</width>
+                  <height>50</height>
+                 </size>
+                </property>
+                <property name="maximumSize">
+                 <size>
+                  <width>300</width>
+                  <height>50</height>
+                 </size>
+                </property>
+                <property name="font">
+                 <font>
+                  <weight>75</weight>
+                  <bold>true</bold>
+                 </font>
+                </property>
+                <property name="styleSheet">
+                 <string notr="true">
+QPushButton {
+background :#34455e;
+border-radius: 10px;
+color: white;
+}
+
+QPushButton:hover {
+    background-color: white;
+    border: 2px solid #475c7a; 
+    cursor: pointer; 
+
+border-radius: 10px ; 
+color:#34455e;
+}</string>
+                </property>
+                <property name="text">
+                 <string>Load </string>
+                </property>
+               </widget>
+              </item>
+              <item row="1" column="0">
+               <spacer name="horizontalSpacer">
+                <property name="orientation">
+                 <enum>Qt::Horizontal</enum>
+                </property>
+                <property name="sizeType">
+                 <enum>QSizePolicy::Fixed</enum>
+                </property>
+                <property name="sizeHint" stdset="0">
+                 <size>
+                  <width>300</width>
+                  <height>10</height>
+                 </size>
+                </property>
+               </spacer>
               </item>
              </layout>
             </item>
