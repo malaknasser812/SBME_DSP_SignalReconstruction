@@ -171,7 +171,6 @@ class MainWindow(QtWidgets.QMainWindow):
         self.x_data = self.time
         self.y_data = self.signal_sum
         self.plot_sin_signal(self.canvas3, self.sampled_graph, self.layout3, self.signal_sum)
-        self.sampler_tab.setCurrentIndex() 
 
 
     def load(self):
