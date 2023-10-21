@@ -69,7 +69,7 @@ class MainWindow(QtWidgets.QMainWindow):
 
 
         # button connections
-        self.show_signal_pushButton.clicked.connect(lambda: self.show_sin_signal())
+        self.showsignal_pushButton.clicked.connect(lambda: self.show_sin_signal())
         self.addtosum_pushButton.clicked.connect(lambda: self.display_summed_sin_signals())
         self.delete_signal_btn.clicked.connect(lambda: self.remove_sin_signal())
         self.send_sampler_btn.clicked.connect(lambda: self.send_to_sampler())
