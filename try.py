@@ -8,9 +8,10 @@ import time
 from scipy.interpolate import interp1d
 import pyqtgraph as pg
 from matplotlib.figure import Figure
-from PyQt5.QtWidgets import QFileDialog, QGraphicsScene
+from PyQt5.QtCore import Qt
+from PyQt5.QtWidgets import QFileDialog, QGraphicsScene ,QLabel , QHBoxLayout
 from matplotlib.backends.backend_qt5agg import FigureCanvasQTAgg
-from PyQt5 import QtWidgets, uic
+from PyQt5 import QtWidgets, uic 
 from matplotlib.pyplot import figure
 import matplotlib.pyplot as plt
 from cmath import*
@@ -48,8 +49,10 @@ class MainWindow(QtWidgets.QMainWindow):
         self.signal_name = ""
 
         self.loaded = False
-        self.maxFreq =0
         self.graph = pg.PlotItem() 
+        self.maxFreq =0
+        self.y_data = []
+        self.x_data = []
 
         self.canvas1 = MplCanvas(self, width=5, height=4, dpi=100)
         self.layout1 = QtWidgets.QVBoxLayout()
@@ -86,6 +89,7 @@ class MainWindow(QtWidgets.QMainWindow):
         self.sample_rate_comboBox.addItem("Normalized Frequency")
         self.sample_rate_comboBox.addItem("Actual Frequency")
         self.sample_rate_comboBox.activated.connect(self.Plot)
+        self.sample_rate_comboBox.currentIndexChanged.connect(self.update_slider_labels)
         self.freq_slider.valueChanged.connect(lambda: self.plotHSlide())
 
         self.time = arange(0.0, 1.0, 0.001)
@@ -220,8 +224,7 @@ class MainWindow(QtWidgets.QMainWindow):
             self.freq_slider.setMaximum(60)
 
         # smapling the data and stored in variable contains both the resampled signal and its associated time values.
-        resample_data = sig.resample(
-            self.y_data, self.freq_slider.value(), self.x_data)
+        resample_data = sig.resample(self.y_data, self.freq_slider.value(), self.x_data)
 
         sample_data = resample_data[0]
         sample_time = resample_data[1]
@@ -278,6 +281,21 @@ class MainWindow(QtWidgets.QMainWindow):
         self.canvas4.axes.clear()
         self.canvas5.axes.clear()
         self.Plot()
+
+    def update_slider_labels(self):
+        selected_option = self.sample_rate_comboBox.currentIndex()
+        min_value = self.freq_slider.minimum()
+        if selected_option == 0:
+            max_value = int(ceil(4 * self.maxFreq))
+        else:
+            max_value = 60
+
+        self.min_slider_label.setText(f"Min: {min_value}")
+        self.max_slider_label.setText(f"Max: {max_value}")
+
+        # Update the slider's range
+        self.freq_slider.setMinimum(min_value)
+        self.freq_slider.setMaximum(max_value)
 
 def main():
     app = QtWidgets.QApplication(sys.argv)
