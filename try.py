@@ -51,6 +51,7 @@ class MainWindow(QtWidgets.QMainWindow):
         self.loaded = False
         self.graph = pg.PlotItem() 
         self.maxFreq =0
+        self.NormFreq_index = 0
         self.y_data = []
         self.x_data = []
 
@@ -103,7 +104,7 @@ class MainWindow(QtWidgets.QMainWindow):
     
 
     
-    # get the required data for each the given signal
+    # get the required data for each selected signal
     def get_data (self):
         self.signal_name = self.sum_signals_combobox.currentText()
         self.indexList = self.signaldict[self.signal_name]
@@ -154,6 +155,7 @@ class MainWindow(QtWidgets.QMainWindow):
 
     # remove selected signal
     def remove_sin_signal(self):
+        #if it is the last signal to be removed from the combobox -> clear graph
         if self.sum_signals_combobox.count() == 1:
             self.signal_sum = [0]*(len(self.time))
             self.signaldict.clear()
@@ -215,15 +217,17 @@ class MainWindow(QtWidgets.QMainWindow):
         self.loaded = True
         self.Plot()
 
+    
+
     def Plot(self):
         selected_option = self.sample_rate_comboBox.currentIndex()
         #choosing normalized freq. so dependently of fmax
-        if selected_option == 0:
+        if selected_option == self.NormFreq_index:
             self.freq_slider.setMaximum(int(ceil(4*self.maxFreq)))
         else: #actual freq.
             self.freq_slider.setMaximum(60)
 
-        # smapling the data and stored in variable contains both the resampled signal and its associated time values.
+        # sampling the data and stored in variable contains both the resampled signal and its associated time values.
         resample_data = sig.resample(self.y_data, self.freq_slider.value(), self.x_data)
 
         sample_data = resample_data[0]
@@ -269,7 +273,8 @@ class MainWindow(QtWidgets.QMainWindow):
         # Find the period that represents the time or distance between two consecutive samples.
 
         T = sample_time[1] - sample_time[0]
-        # converting to 2D array In signal processing and interpolation, working with 2D arrays (matrices) often allows for more efficient and vectorized computations
+        # converting to 2D array In signal processing and interpolation, 
+        # working with 2D arrays (matrices) often allows for more efficient and vectorized computations
         sincM = np.tile(original_time, (len(sample_time), 1)) - \
             np.tile(sample_time[:, np.newaxis], (1, len(original_time)))
         #calculates a weighted sum of the resampled data x using the sinc function values
