@@ -51,7 +51,7 @@ class MainWindow(QtWidgets.QMainWindow):
         self.loaded = False
         self.graph = pg.PlotItem() 
         self.maxFreq =0
-        self.NormFreq_index = 0
+        self.normFreq_index = 0
         self.y_data = []
         self.x_data = []
 
@@ -222,7 +222,7 @@ class MainWindow(QtWidgets.QMainWindow):
     def Plot(self):
         selected_option = self.sample_rate_comboBox.currentIndex()
         #choosing normalized freq. so dependently of fmax
-        if selected_option == self.NormFreq_index:
+        if selected_option == self.normFreq_index:
             self.freq_slider.setMaximum(int(ceil(4*self.maxFreq)))
         else: #actual freq.
             self.freq_slider.setMaximum(60)
@@ -290,7 +290,7 @@ class MainWindow(QtWidgets.QMainWindow):
     def update_slider_labels(self):
         selected_option = self.sample_rate_comboBox.currentIndex()
         min_value = self.freq_slider.minimum()
-        if selected_option == 0:
+        if selected_option == self.normFreq_index:
             max_value = int(ceil(4 * self.maxFreq))
         else:
             max_value = 60
