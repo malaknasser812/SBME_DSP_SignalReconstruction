@@ -77,13 +77,15 @@ class MainWindow(QtWidgets.QMainWindow):
         self.layout5.addWidget(self.canvas5)
 
         #maping each signal with its variables
+        #store signal names as keys and corresponding signal parameters (magnitude, frequency, phase) as values.
         self.signaldict = dict()
         self.signal_sum = 0 #sum of the added sin signals
         self.sin_signal_list = []
 
         #setting the min and max values of the SNR value
-        self.SNR_slider.setMinimum(2)
+        self.SNR_slider.setMinimum(0)
         self.SNR_slider.setMaximum(30)
+        self.SNR_slider.setValue(self.SNR_slider.maximum())
 
         # button connections
         self.showsignal_pushButton.clicked.connect(lambda: self.show_sin_signal())
@@ -149,8 +151,6 @@ class MainWindow(QtWidgets.QMainWindow):
                         self.layout1, self.sinusoidal)
         
 
-
-
     # Add the sinusoidals generated
     def display_summed_sin_signals(self):
         #temp_sum = self.signal_sum + self.sinusoidal
@@ -167,9 +167,30 @@ class MainWindow(QtWidgets.QMainWindow):
         self.plot_sin_signal(self.canvas2, self.summation_graph,
                         self.layout2, self.signal_sum)
         
+
+    #NOISE by farooo7aaaaaa
+    def update_noise_level(self):
+        noise_level = self.SNR_slider.value()  # Get the current noise level from the slider
+        self.add_noise_based_on_snr(noise_level)
+    
+
+    def add_noise_based_on_snr(self, snr_level):
+        # Calculate the signal power (you may need to adjust this based on your signal)
+        signal_power = np.mean(np.square(self.sinusoidal))
+
+        # Calculate the desired noise power based on the SNR level
+        noise_power = signal_power / (10**(snr_level / 10))
+
+        # Generate Gaussian noise with the specified noise power
+        noise = np.random.normal(0, np.sqrt(noise_power), len(self.time))
+
+        # Add the noise to the signal
+        noisy_signal = self.sinusoidal + noise
+
+        # Plot the noisy signal
+        self.plot_sin_signal(self.canvas3, self.sampled_graph, self.layout3, noisy_signal)
         
-
-
+        
     # remove selected signal
     def remove_sin_signal(self):
         if self.sum_signals_combobox.count() == 0:
