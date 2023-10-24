@@ -52,6 +52,8 @@ class MainWindow(QtWidgets.QMainWindow):
         self.magnitude = 0
         self.frequency = 1
         self.phase = 0
+        self.noise_flag = False
+        self.SNR_LVL = 1
 
         self.sinusoidal = 0
         self.signalSum = 0
@@ -61,6 +63,7 @@ class MainWindow(QtWidgets.QMainWindow):
         self.loaded = False
         self.graph = pg.PlotItem() 
         self.maxFreq =0
+        self.normFreq_index = 0
         self.y_data = []
         self.x_data = []
 
@@ -89,6 +92,9 @@ class MainWindow(QtWidgets.QMainWindow):
         self.signal_sum = 0 #sum of the added sin signals
         self.sin_signal_list = []
 
+        #setting the min and max values of the SNR value
+        self.SNR_slider.setMinimum(2)
+        self.SNR_slider.setMaximum(30)
 
         # button connections
         self.showsignal_pushButton.clicked.connect(lambda: self.show_sin_signal())
@@ -98,11 +104,14 @@ class MainWindow(QtWidgets.QMainWindow):
         self.load_btn.clicked.connect(lambda: self.load())
         self.sample_rate_comboBox.addItem("Normalized Frequency")
         self.sample_rate_comboBox.addItem("Actual Frequency")
-        self.sample_rate_comboBox.activated.connect(self.Plot)
+        self.sample_rate_comboBox.activated.connect(lambda:self.plot(self.y_data))
         self.sample_rate_comboBox.currentIndexChanged.connect(self.update_slider_labels)
         self.freq_slider.valueChanged.connect(self.updateValueLabel)
         self.value_label = QLabel()
         self.layout.addWidget(self.value_label)
+        self.freq_slider.valueChanged.connect(lambda: self.plotHSlide())
+        #self.add_noise_checkbox.stateChanged.connect(lambda : self.toggle_noise)
+        #self.SNR_slider.valueChanged.connect(lambda: self.SNR_value_change)
 
         self.time = arange(0.0, 1.0, 0.001)
 
@@ -116,7 +125,7 @@ class MainWindow(QtWidgets.QMainWindow):
     
 
     
-    # get the required data for each the given signal
+    # get the required data for each selected signal
     def get_data (self):
         self.signal_name = self.sum_signals_combobox.currentText()
         self.indexList = self.signaldict[self.signal_name]
@@ -167,6 +176,7 @@ class MainWindow(QtWidgets.QMainWindow):
 
     # remove selected signal
     def remove_sin_signal(self):
+        #if it is the last signal to be removed from the combobox -> clear graph
         if self.sum_signals_combobox.count() == 1:
             self.signal_sum = [0]*(len(self.time))
             self.signaldict.clear()
@@ -226,35 +236,39 @@ class MainWindow(QtWidgets.QMainWindow):
         self.maxFreq = max(self.fmaxtuble[0])
         print(self.maxFreq)
         self.loaded = True
-        self.Plot()
+        self.plot(self.y_data)
 
-    def Plot(self):
+    
+
+    def plot(self, y_data):
         selected_option = self.sample_rate_comboBox.currentIndex()
         #choosing normalized freq. so dependently of fmax
-        if selected_option == 0:
+        if selected_option == self.normFreq_index:
             self.freq_slider.setMaximum(int(ceil(4*self.maxFreq)))
         else: #actual freq.
             self.freq_slider.setMaximum(60)
 
         # smapling the data and stored in variable contains both the resampled signal and its associated time values.
         sample_data,sample_time = sig.resample(self.y_data, self.freq_slider.value(), self.x_data)
+        # sampling the data and stored in variable contains both the resampled signal and its associated time values.
+        resample_data = sig.resample(y_data, self.freq_slider.value(), self.x_data)
 
         
         # ensure that the first sample has the same time and value as the original data and that the last sample also matches the original data
         if len(sample_time) > 0:
             sample_time[0]=self.x_data[0]
-        sample_data[0]=self.y_data[0]
+        sample_data[0]=y_data[0]
         sample_time=np.append(sample_time,[self.x_data[-1]])
-        sample_data=np.append(sample_data,[self.y_data[-1]])
+        sample_data=np.append(sample_data,[y_data[-1]])
 
         #interpolatng on the new data 
         recontructed_data = self.sinc_interp(sample_data, sample_time, self.x_data)
 
         # Calculate the error between the original signal and the reconstructed signal
-        error = self.y_data - recontructed_data
+        error = y_data - recontructed_data
         
         # plotting the original signal and the sampled data as dots 
-        self.canvas3.axes.plot(self.x_data, self.y_data)
+        self.canvas3.axes.plot(self.x_data, y_data)
         self.canvas3.axes.scatter(sample_time, sample_data, color='k', s=10)
         self.canvas3.draw()
         self.sampled_graph.setCentralItem(self.graph)
@@ -281,23 +295,26 @@ class MainWindow(QtWidgets.QMainWindow):
         # Find the period that represents the time or distance between two consecutive samples.
 
         T = sample_time[1] - sample_time[0]
-        # converting to 2D array In signal processing and interpolation, working with 2D arrays (matrices) often allows for more efficient and vectorized computations
+        # converting to 2D array In signal processing and interpolation, 
+        # working with 2D arrays (matrices) often allows for more efficient and vectorized computations
         sincM = np.tile(original_time, (len(sample_time), 1)) - \
             np.tile(sample_time[:, np.newaxis], (1, len(original_time)))
         #calculates a weighted sum of the resampled data x using the sinc function values
         interpolated_data = np.dot(sample_data, np.sinc(sincM/T))
         return interpolated_data
+    
+
 
     def plotHSlide(self):
         self.canvas3.axes.clear()
         self.canvas4.axes.clear()
         self.canvas5.axes.clear()
-        self.Plot()
+        self.plot(self.y_data)
 
     def update_slider_labels(self):
         selected_option = self.sample_rate_comboBox.currentIndex()
         min_value = self.freq_slider.minimum()
-        if selected_option == 0:
+        if selected_option == self.normFreq_index:
             max_value = int(ceil(4 * self.maxFreq))
         else:
             max_value = 60
@@ -308,6 +325,47 @@ class MainWindow(QtWidgets.QMainWindow):
         # Update the slider's range
         self.freq_slider.setMinimum(min_value)
         self.freq_slider.setMaximum(max_value)
+
+
+    # def toggle_noise(self):
+    #     self.noise_flag = not self.noise_flag  
+    #     self.add_gaussian_noise(self.y_data)
+
+            
+    # def add_gaussian_noise(self,y_data):
+    #         #if the noise checkbox is true -> add noise to the signal
+    #         if self.noise_flag:
+    #             # Calculate the power of the signal -> computes the mean of the squared values of y_data.
+    #             signal_power = np.mean(np.square(y_data))
+
+    #             # Calculate the desired noise power based on SNR
+    #             noise_power = signal_power / (10**(self.SNR_LVL / 10))
+
+    #             # Generate white Gaussian noise
+    #             noise = np.random.normal(0, np.sqrt(noise_power), len(y_data))
+
+    #             # Add noise to the signal
+    #             y_noisy = y_data + noise
+
+    #             #plotting the new noisy signal 
+    #             print (len(y_noisy), len(y_data))
+    #             self.plot (y_noisy)
+
+    #         #else draw the original data given (without noise)
+    #         else: self.plot(y_data)
+
+
+    # def SNR_value_change(self,):
+    #         self.SNR_LVL = self.SNR_slider.value()
+    #         self.add_gaussian_noise(self,self.y_data)
+
+
+
+
+
+            
+        
+
 
 def main():
     app = QtWidgets.QApplication(sys.argv)

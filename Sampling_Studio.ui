@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>1213</width>
-    <height>841</height>
+    <width>1359</width>
+    <height>843</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -220,6 +220,7 @@ QComboBox::drop-down {
 QComboBox::down-arrow {
     image: url(/usr/share/icons/Adwaita/16x16/actions/go-down-symbolic.symbolic.png); /*Adawaita icon thene*/
 }
+
 QComboBox::down-arrow:on {
     top: 1px;
     left: 1px;
@@ -242,6 +243,7 @@ QCheckBox:disabled, QRadioButton:disabled {
     color: #808086;
     padding: 2px;
 }
+
 QCheckBox:hover {
     border-radius:4px;
     border-style:solid;
@@ -285,6 +287,7 @@ QMenuBar::item {
     padding: 1px 4px;
     background-color: #ececec;
 }
+
 QMenuBar::item:selected {
     background-color: #dadada;
     color: #3d3d3d;
@@ -313,9 +316,11 @@ QTabWidget::pane {
     top: -0.5em;
     padding-top: 0.5em;
 }
+
 QTabWidget::tab-bar {
     alignment: center;
 }
+
 QTabBar::tab {
     border-bottom: 1px solid #c0c0c0;
     padding: 3px;
@@ -358,9 +363,11 @@ QRadioButton::indicator:!checked {
 QStatusBar {
     color:#027f7f;
 }
+
 QDial {
     background: #16a085;
 }
+
 QToolBox {
     color: #a9b7c6;
     background-color: #222b2e;
@@ -377,6 +384,7 @@ QScrollArea {
     color: #FFFFFF;
     background-color:#222b2e;
 }
+
 QScrollBar:horizontal {
 	max-height: 10px;
 	border: 1px transparent grey;
@@ -441,7 +449,7 @@ QScrollBar::right-arrow:horizontal {
 </string>
       </property>
       <property name="currentIndex">
-       <number>0</number>
+       <number>1</number>
       </property>
       <widget class="QWidget" name="sampler_tab">
        <attribute name="title">
@@ -450,6 +458,12 @@ QScrollBar::right-arrow:horizontal {
        <layout class="QGridLayout" name="gridLayout_6">
         <item row="0" column="0">
          <widget class="QSplitter" name="splitter_9">
+          <property name="minimumSize">
+           <size>
+            <width>1309</width>
+            <height>0</height>
+           </size>
+          </property>
           <property name="orientation">
            <enum>Qt::Horizontal</enum>
           </property>
@@ -476,7 +490,7 @@ QScrollBar::right-arrow:horizontal {
           <widget class="QGroupBox" name="groupBox">
            <property name="maximumSize">
             <size>
-             <width>500</width>
+             <width>324</width>
              <height>16777215</height>
             </size>
            </property>
@@ -509,6 +523,7 @@ QScrollBar::right-arrow:horizontal {
                    <font>
                     <family>Calibri</family>
                     <pointsize>16</pointsize>
+                    <weight>75</weight>
                     <bold>true</bold>
                    </font>
                   </property>
@@ -609,6 +624,7 @@ QScrollBar::right-arrow:horizontal {
                    <font>
                     <family>Calibri</family>
                     <pointsize>14</pointsize>
+                    <weight>75</weight>
                     <bold>true</bold>
                    </font>
                   </property>
@@ -648,6 +664,7 @@ QScrollBar::right-arrow:horizontal {
                    <font>
                     <family>Calibri</family>
                     <pointsize>14</pointsize>
+                    <weight>50</weight>
                     <bold>false</bold>
                    </font>
                   </property>
@@ -716,6 +733,7 @@ QScrollBar::right-arrow:horizontal {
                 </property>
                 <property name="font">
                  <font>
+                  <weight>75</weight>
                   <bold>true</bold>
                  </font>
                 </property>
@@ -790,66 +808,6 @@ color:#34455e;
                 <property name="leftMargin">
                  <number>0</number>
                 </property>
-                <item>
-                 <layout class="QHBoxLayout" name="horizontalLayout">
-                  <property name="leftMargin">
-                   <number>0</number>
-                  </property>
-                  <property name="topMargin">
-                   <number>0</number>
-                  </property>
-                  <item>
-                   <widget class="QRadioButton" name="sin_radioButton">
-                    <property name="maximumSize">
-                     <size>
-                      <width>500</width>
-                      <height>16777215</height>
-                     </size>
-                    </property>
-                    <property name="font">
-                     <font>
-                      <pointsize>10</pointsize>
-                      <bold>true</bold>
-                     </font>
-                    </property>
-                    <property name="styleSheet">
-                     <string notr="true">QRadioButton::indicator:checked {
-    border-color: #48a5fd;
-    background-color: qradialgradient(cx:0.5, cy:0.5, radius:0.4,fx:0.5, fy:0.5, stop:0 #ffffff, stop:0.5 #ffffff, stop:0.6 #34455e, stop:1 #34455e);
-}</string>
-                    </property>
-                    <property name="text">
-                     <string>Sine</string>
-                    </property>
-                   </widget>
-                  </item>
-                  <item>
-                   <widget class="QRadioButton" name="cos_radioButton">
-                    <property name="maximumSize">
-                     <size>
-                      <width>500</width>
-                      <height>16777215</height>
-                     </size>
-                    </property>
-                    <property name="font">
-                     <font>
-                      <pointsize>10</pointsize>
-                      <bold>true</bold>
-                     </font>
-                    </property>
-                    <property name="styleSheet">
-                     <string notr="true">QRadioButton::indicator:checked {
-    border-color: #48a5fd;
-    background-color: qradialgradient(cx:0.5, cy:0.5, radius:0.4,fx:0.5, fy:0.5, stop:0 #ffffff, stop:0.5 #ffffff, stop:0.6 #34455e, stop:1 #34455e);
-}</string>
-                    </property>
-                    <property name="text">
-                     <string>Cosine</string>
-                    </property>
-                   </widget>
-                  </item>
-                 </layout>
-                </item>
                 <item>
                  <widget class="QLineEdit" name="name_lineEdit">
                   <property name="minimumSize">
@@ -977,6 +935,7 @@ color:#34455e;
                   </property>
                   <property name="font">
                    <font>
+                    <weight>75</weight>
                     <bold>true</bold>
                    </font>
                   </property>
@@ -990,10 +949,12 @@ background :#34455e;
 border-radius: 10px;
 color: white;
 }
+
 QPushButton:hover {
     background-color: white;
     border: 2px solid #475c7a; 
     cursor: pointer; 
+
 border-radius: 10px ; 
 color:#34455e;
 }</string>
@@ -1019,6 +980,7 @@ color:#34455e;
                   </property>
                   <property name="font">
                    <font>
+                    <weight>75</weight>
                     <bold>true</bold>
                    </font>
                   </property>
@@ -1029,10 +991,12 @@ background :#34455e;
 border-radius: 10px;
 color: white;
 }
+
 QPushButton:hover {
     background-color: white;
     border: 2px solid #475c7a; 
     cursor: pointer; 
+
 border-radius: 10px ; 
 color:#34455e;
 }</string>
@@ -1095,6 +1059,7 @@ color:#34455e;
                   </property>
                   <property name="font">
                    <font>
+                    <weight>75</weight>
                     <bold>true</bold>
                    </font>
                   </property>
@@ -1105,10 +1070,12 @@ background :#34455e;
 border-radius: 10px;
 color: white;
 }
+
 QPushButton:hover {
     background-color: white;
     border: 2px solid #475c7a; 
     cursor: pointer; 
+
 border-radius: 10px ; 
 color:#34455e;
 }</string>
@@ -1137,6 +1104,7 @@ color:#34455e;
                   </property>
                   <property name="font">
                    <font>
+                    <weight>75</weight>
                     <bold>true</bold>
                    </font>
                   </property>
@@ -1147,10 +1115,12 @@ background :#34455e;
 border-radius: 10px;
 color: white;
 }
+
 QPushButton:hover {
     background-color: white;
     border: 2px solid #475c7a; 
     cursor: pointer; 
+
 border-radius: 10px ; 
 color:#34455e;
 }</string>
@@ -1185,8 +1155,8 @@ color:#34455e;
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>1213</width>
-     <height>22</height>
+     <width>1359</width>
+     <height>26</height>
     </rect>
    </property>
   </widget>
