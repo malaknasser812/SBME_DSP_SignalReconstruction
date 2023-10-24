@@ -84,7 +84,7 @@ class MainWindow(QtWidgets.QMainWindow):
 
         #setting the min and max values of the SNR value
         self.SNR_slider.setMinimum(0)
-        self.SNR_slider.setMaximum(30)
+        self.SNR_slider.setMaximum(35)
         self.SNR_slider.setValue(self.SNR_slider.maximum())
 
         # button connections
@@ -176,7 +176,7 @@ class MainWindow(QtWidgets.QMainWindow):
 
     def add_noise_based_on_snr(self, snr_level):
         # Calculate the signal power (you may need to adjust this based on your signal)
-        signal_power = np.mean(np.square(self.sinusoidal))
+        signal_power = np.mean(np.square(self.signal_sum))
 
         # Calculate the desired noise power based on the SNR level
         noise_power = signal_power / (10**(snr_level / 10))
@@ -185,7 +185,7 @@ class MainWindow(QtWidgets.QMainWindow):
         noise = np.random.normal(0, np.sqrt(noise_power), len(self.time))
 
         # Add the noise to the signal
-        noisy_signal = self.sinusoidal + noise
+        noisy_signal = self.signal_sum + noise
 
         # Plot the noisy signal
         self.plot_sin_signal(self.canvas3, self.sampled_graph, self.layout3, noisy_signal)
