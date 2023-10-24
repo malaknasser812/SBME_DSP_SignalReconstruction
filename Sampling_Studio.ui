@@ -449,7 +449,7 @@ QScrollBar::right-arrow:horizontal {
 </string>
       </property>
       <property name="currentIndex">
-       <number>1</number>
+       <number>0</number>
       </property>
       <widget class="QWidget" name="sampler_tab">
        <attribute name="title">
@@ -599,6 +599,13 @@ QScrollBar::right-arrow:horizontal {
                   </property>
                   <property name="orientation">
                    <enum>Qt::Horizontal</enum>
+                  </property>
+                 </widget>
+                </item>
+                <item>
+                 <widget class="QLabel" name="sliderlabel">
+                  <property name="text">
+                   <string/>
                   </property>
                  </widget>
                 </item>

@@ -30,16 +30,6 @@ class MplCanvas(FigureCanvasQTAgg):
         self.axes = fig.add_subplot(1,1,1)
         super(MplCanvas, self).__init__(fig)
 
-class CustomSlider(QSlider):
-    def paintEvent(self, event):
-        super().paintEvent(event)
-        painter = QPainter(self)
-        handle_rect = self.sliderPosition()
-        text_rect = handle_rect.adjusted(0, -25, 0, -5)  # Adjust these values for text positioning
-        painter.drawText(text_rect, Qt.AlignmentFlag.AlignCenter, str(self.value()))
-
-
-
 class MainWindow(QtWidgets.QMainWindow):
 
     def __init__(self, *args, **kwargs):
@@ -104,19 +94,17 @@ class MainWindow(QtWidgets.QMainWindow):
         self.load_btn.clicked.connect(lambda: self.load())
         self.sample_rate_comboBox.addItem("Normalized Frequency")
         self.sample_rate_comboBox.addItem("Actual Frequency")
-        self.sample_rate_comboBox.activated.connect(lambda:self.plot(self.y_data))
-        self.sample_rate_comboBox.currentIndexChanged.connect(self.update_slider_labels)
-        self.freq_slider.valueChanged.connect(self.updateValueLabel)
-        self.value_label = QLabel()
-        self.layout.addWidget(self.value_label)
+        self.sample_rate_comboBox.activated.connect(self.update_slider_labels)
+        # self.sample_rate_comboBox.currentIndexChanged.connect(self.update_slider_labels)
         self.freq_slider.valueChanged.connect(lambda: self.plotHSlide())
         #self.add_noise_checkbox.stateChanged.connect(lambda : self.toggle_noise)
         #self.SNR_slider.valueChanged.connect(lambda: self.SNR_value_change)
 
         self.time = arange(0.0, 1.0, 0.001)
+    def update_value_label(self):
+        value = self.freq_slider.value()
+        self.value_label.setText(f"Current Value: {value}")
 
-    def updateValueLabel(self, value):
-        self.value_label.setText(str(value))
     # define signal using given parameters ex: magnitude*sin(omega*self.time + theta)
     def signalParameters(self, magnitude, frequency, phase):
         omega = 2*pi*frequency
@@ -150,9 +138,9 @@ class MainWindow(QtWidgets.QMainWindow):
         self.frequency = float(self.freq_lineEdit.text())
         self.phase = float(self.phase_lineEdit.text())
         self.name = (self.name_lineEdit.text())        
-        if self.cos_radioButton.isChecked() == True: 
+        # if self.cos_radioButton.isChecked() == True: 
             #cosine wave will be drawn
-            self.phase += 90
+            # self.phase += 90
 
         self.signaldict[self.name] = self.magnitude, self.frequency, self.phase
         self.sinusoidal = self.signalParameters(
@@ -241,12 +229,12 @@ class MainWindow(QtWidgets.QMainWindow):
     
 
     def plot(self, y_data):
-        selected_option = self.sample_rate_comboBox.currentIndex()
-        #choosing normalized freq. so dependently of fmax
-        if selected_option == self.normFreq_index:
-            self.freq_slider.setMaximum(int(ceil(4*self.maxFreq)))
-        else: #actual freq.
-            self.freq_slider.setMaximum(60)
+        # selected_option = self.sample_rate_comboBox.currentIndex()
+        # #choosing normalized freq. so dependently of fmax
+        # if selected_option == "Normalized Frequency" :
+        #     self.freq_slider.setMaximum(int(ceil(4*self.maxFreq)))
+        # else: #actual freq.
+        #     self.freq_slider.setMaximum(60)
 
         # smapling the data and stored in variable contains both the resampled signal and its associated time values.
         sample_data,sample_time = sig.resample(self.y_data, self.freq_slider.value(), self.x_data)
@@ -302,7 +290,6 @@ class MainWindow(QtWidgets.QMainWindow):
         #calculates a weighted sum of the resampled data x using the sinc function values
         interpolated_data = np.dot(sample_data, np.sinc(sincM/T))
         return interpolated_data
-    
 
 
     def plotHSlide(self):
@@ -313,18 +300,15 @@ class MainWindow(QtWidgets.QMainWindow):
 
     def update_slider_labels(self):
         selected_option = self.sample_rate_comboBox.currentIndex()
-        min_value = self.freq_slider.minimum()
-        if selected_option == self.normFreq_index:
-            max_value = int(ceil(4 * self.maxFreq))
+        self.freq_slider.setMinimum(0)  # Set the minimum value of both cases
+        current_value = self.freq_slider.value()
+        if selected_option == 0 : # 0 corresponds to "Normalized Frequency"
+            self.freq_slider.setMaximum(int(ceil(4 * self.maxFreq)))  # Set the maximum value in case 1       
+            self.sliderlabel.setText(f'{current_value} Fmax')
         else:
-            max_value = 60
+            self.freq_slider.setMaximum(60)
+            self.sliderlabel.setText(f'{current_value} Hz')
 
-        self.min_slider_label.setText(f"Min: {min_value}")
-        self.max_slider_label.setText(f"Max: {max_value}")
-
-        # Update the slider's range
-        self.freq_slider.setMinimum(min_value)
-        self.freq_slider.setMaximum(max_value)
 
 
     # def toggle_noise(self):
