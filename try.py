@@ -239,10 +239,6 @@ class MainWindow(QtWidgets.QMainWindow):
 
         # smapling the data and stored in variable contains both the resampled signal and its associated time values.
         sample_data,sample_time = sig.resample(self.y_data, self.freq_slider.value(), self.x_data)
-        # # sampling the data and stored in variable contains both the resampled signal and its associated time values.
-        # resample_data = sig.resample(y_data, self.freq_slider.value(), self.x_data)
-
-        
         # ensure that the first sample has the same time and value as the original data and that the last sample also matches the original data
         if len(sample_time) > 0:
             sample_time[0]=self.x_data[0]
@@ -252,24 +248,20 @@ class MainWindow(QtWidgets.QMainWindow):
 
         #interpolatng on the new data 
         recontructed_data = self.sinc_interp(sample_data, sample_time, self.x_data)
-
         # Calculate the error between the original signal and the reconstructed signal
         error = y_data - recontructed_data
-        
         # plotting the original signal and the sampled data as dots 
         self.canvas3.axes.plot(self.x_data, y_data,color='b')
         self.canvas3.axes.scatter(sample_time, sample_data, color='k', s=10)
-        self.canvas4.axes.legend([self.signal_name])  # Add a legend
+        # self.canvas4.axes.legend(labels=self.signal_name)  # Add a legend
         self.canvas3.draw()
         self.sampled_graph.setCentralItem(self.graph)
         self.sampled_graph.setLayout(self.layout3)
-
         # plotting the constructed data on the second graph
         self.canvas4.axes.plot(self.x_data, recontructed_data, color='r')
         self.canvas4.draw()
         self.recovered_graph.setCentralItem(self.graph)
         self.recovered_graph.setLayout(self.layout4)
-        
         # plotting the error difference between 2 graphs in 3rd graph
         self.canvas5.axes.plot(self.x_data, error, color='g')
         self.canvas5.draw()
