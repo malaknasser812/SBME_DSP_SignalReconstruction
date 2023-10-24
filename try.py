@@ -97,17 +97,17 @@ class MainWindow(QtWidgets.QMainWindow):
         self.sample_rate_comboBox.addItem("Normalized Frequency")
         self.sample_rate_comboBox.addItem("Actual Frequency")
         self.sample_rate_comboBox.activated.connect(self.update_slider_labels)
-        # self.sample_rate_comboBox.currentIndexChanged.connect(self.update_slider_labels)
         self.freq_slider.valueChanged.connect(lambda: self.plotHSlide())
+        self.freq_slider.valueChanged.connect(self.update_lcd_value)
         #self.add_noise_checkbox.stateChanged.connect(lambda : self.toggle_noise)
         #self.SNR_slider.valueChanged.connect(lambda: self.SNR_value_change)
 
         self.SNR_slider.valueChanged.connect(lambda: self.update_noise_level()) # faroooo7aaaasssssss 
 
         self.time = arange(0.0, 1.0, 0.001)
-    def update_value_label(self):
-        value = self.freq_slider.value()
-        self.value_label.setText(f"Current Value: {value}")
+    def update_lcd_value(self):
+        self.lcd_freq.display(self.freq_slider.value())
+
 
     # define signal using given parameters ex: magnitude*sin(omega*self.time + theta)
     def signalParameters(self, magnitude, frequency, phase):
@@ -155,7 +155,7 @@ class MainWindow(QtWidgets.QMainWindow):
 
     # Add the sinusoidals generated
     def display_summed_sin_signals(self):
-        
+        self.sum_signals_combobox.addItem(self.name)
         self.signal_sum += self.sinusoidal
         self.sum_signals_combobox.addItem(self.name)
         self.plot_sin_signal(self.canvas2, self.summation_graph,
@@ -208,6 +208,7 @@ class MainWindow(QtWidgets.QMainWindow):
         self.canvas3.axes.clear()
         self.x_data = self.time
         self.y_data = self.signal_sum
+        
         self.plot_sin_signal(self.canvas3, self.sampled_graph, self.layout3, self.signal_sum)
 
 
@@ -247,17 +248,17 @@ class MainWindow(QtWidgets.QMainWindow):
         self.maxFreq = max(self.fmaxtuble[0])
         print(self.maxFreq)
         self.loaded = True
-        self.plot(self.y_data)
+        self.Plot(self.y_data)
 
     
 
-    def plot(self, y_data):
-        # selected_option = self.sample_rate_comboBox.currentIndex()
-        # #choosing normalized freq. so dependently of fmax
-        # if selected_option == "Normalized Frequency" :
-        #     self.freq_slider.setMaximum(int(ceil(4*self.maxFreq)))
-        # else: #actual freq.
-        #     self.freq_slider.setMaximum(60)
+    def Plot(self, y_data):
+        selected_option = self.sample_rate_comboBox.currentIndex()
+        #choosing normalized freq. so dependently of fmax
+        if selected_option == 0 :
+            self.freq_slider.setMaximum(int(ceil(4*self.maxFreq)))
+        else: #actual freq.
+            self.freq_slider.setMaximum(60)
 
         # smapling the data and stored in variable contains both the resampled signal and its associated time values.
         sample_data,sample_time = sig.resample(self.y_data, self.freq_slider.value(), self.x_data)
@@ -319,18 +320,17 @@ class MainWindow(QtWidgets.QMainWindow):
         self.canvas3.axes.clear()
         self.canvas4.axes.clear()
         self.canvas5.axes.clear()
-        self.plot(self.y_data)
+        self.Plot(self.y_data)
 
     def update_slider_labels(self):
         selected_option = self.sample_rate_comboBox.currentIndex()
-        self.freq_slider.setMinimum(0)  # Set the minimum value of both cases
-        current_value = self.freq_slider.value()
+        self.freq_slider.setMinimum(1)  # Set the minimum value of both cases
         if selected_option == 0 : # 0 corresponds to "Normalized Frequency"
-            self.freq_slider.setMaximum(int(ceil(4 * self.maxFreq)))  # Set the maximum value in case 1       
-            self.sliderlabel.setText(f'{current_value} Fmax')
+            self.freq_slider.setMaximum(int(4 * self.maxFreq))  # Set the maximum value in case 1       
+            self.sliderlabel.setText(' Fmax')
         else:
             self.freq_slider.setMaximum(60)
-            self.sliderlabel.setText(f'{current_value} Hz')
+            self.sliderlabel.setText(' Hz')
 
 
 
