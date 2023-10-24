@@ -8,10 +8,11 @@ import time
 from scipy.interpolate import interp1d
 import pyqtgraph as pg
 from matplotlib.figure import Figure
-from PyQt5.QtCore import Qt
-from PyQt5.QtWidgets import QFileDialog, QGraphicsScene ,QLabel , QHBoxLayout
+from PyQt5.QtCore import Qt 
+from PyQt5.QtWidgets import QFileDialog, QGraphicsScene ,QLabel , QHBoxLayout ,QSlider
 from matplotlib.backends.backend_qt5agg import FigureCanvasQTAgg
 from PyQt5 import QtWidgets, uic 
+from PyQt5.QtGui import QPainter 
 from matplotlib.pyplot import figure
 import matplotlib.pyplot as plt
 from cmath import*
@@ -28,6 +29,15 @@ class MplCanvas(FigureCanvasQTAgg):
         fig = Figure(figsize=(width, height), dpi=dpi)
         self.axes = fig.add_subplot(1,1,1)
         super(MplCanvas, self).__init__(fig)
+
+class CustomSlider(QSlider):
+    def paintEvent(self, event):
+        super().paintEvent(event)
+        painter = QPainter(self)
+        handle_rect = self.sliderPosition()
+        text_rect = handle_rect.adjusted(0, -25, 0, -5)  # Adjust these values for text positioning
+        painter.drawText(text_rect, Qt.AlignmentFlag.AlignCenter, str(self.value()))
+
 
 
 class MainWindow(QtWidgets.QMainWindow):
@@ -90,11 +100,14 @@ class MainWindow(QtWidgets.QMainWindow):
         self.sample_rate_comboBox.addItem("Actual Frequency")
         self.sample_rate_comboBox.activated.connect(self.Plot)
         self.sample_rate_comboBox.currentIndexChanged.connect(self.update_slider_labels)
-        self.freq_slider.valueChanged.connect(lambda: self.plotHSlide())
+        self.freq_slider.valueChanged.connect(self.updateValueLabel)
+        self.value_label = QLabel()
+        self.layout.addWidget(self.value_label)
 
         self.time = arange(0.0, 1.0, 0.001)
 
-
+    def updateValueLabel(self, value):
+        self.value_label.setText(str(value))
     # define signal using given parameters ex: magnitude*sin(omega*self.time + theta)
     def signalParameters(self, magnitude, frequency, phase):
         omega = 2*pi*frequency
@@ -224,10 +237,9 @@ class MainWindow(QtWidgets.QMainWindow):
             self.freq_slider.setMaximum(60)
 
         # smapling the data and stored in variable contains both the resampled signal and its associated time values.
-        resample_data = sig.resample(self.y_data, self.freq_slider.value(), self.x_data)
+        sample_data,sample_time = sig.resample(self.y_data, self.freq_slider.value(), self.x_data)
 
-        sample_data = resample_data[0]
-        sample_time = resample_data[1]
+        
         # ensure that the first sample has the same time and value as the original data and that the last sample also matches the original data
         if len(sample_time) > 0:
             sample_time[0]=self.x_data[0]
