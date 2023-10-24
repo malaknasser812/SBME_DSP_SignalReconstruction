@@ -100,7 +100,7 @@ class MainWindow(QtWidgets.QMainWindow):
         self.freq_slider.valueChanged.connect(lambda: self.plotHSlide())
         #self.add_noise_checkbox.stateChanged.connect(lambda : self.toggle_noise)
         #self.SNR_slider.valueChanged.connect(lambda: self.SNR_value_change)
-
+        self.SNR_slider.valueChanged.connect(lambda: self.update_noise_level()) # faroooo7aaaasssssss 
         self.time = arange(0.0, 2.0, 0.001)
 
 
