@@ -197,6 +197,7 @@ class MainWindow(QtWidgets.QMainWindow):
         self.fname1 = QFileDialog.getOpenFileName(
             None, "Select a file...", os.getenv('HOME'), filter="All files (*)")
         path1 = self.fname1[0]
+        self.signal_name = os.path.basename(path1)
         data1 = pd.read_csv(path1)
         # Extract signal data (Y) and time data (X) from the CSV file
         self.y_data = data1.values[:, 1]
@@ -238,8 +239,8 @@ class MainWindow(QtWidgets.QMainWindow):
 
         # smapling the data and stored in variable contains both the resampled signal and its associated time values.
         sample_data,sample_time = sig.resample(self.y_data, self.freq_slider.value(), self.x_data)
-        # sampling the data and stored in variable contains both the resampled signal and its associated time values.
-        resample_data = sig.resample(y_data, self.freq_slider.value(), self.x_data)
+        # # sampling the data and stored in variable contains both the resampled signal and its associated time values.
+        # resample_data = sig.resample(y_data, self.freq_slider.value(), self.x_data)
 
         
         # ensure that the first sample has the same time and value as the original data and that the last sample also matches the original data
@@ -256,8 +257,9 @@ class MainWindow(QtWidgets.QMainWindow):
         error = y_data - recontructed_data
         
         # plotting the original signal and the sampled data as dots 
-        self.canvas3.axes.plot(self.x_data, y_data)
+        self.canvas3.axes.plot(self.x_data, y_data,color='b')
         self.canvas3.axes.scatter(sample_time, sample_data, color='k', s=10)
+        self.canvas4.axes.legend([self.signal_name])  # Add a legend
         self.canvas3.draw()
         self.sampled_graph.setCentralItem(self.graph)
         self.sampled_graph.setLayout(self.layout3)
