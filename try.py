@@ -69,7 +69,7 @@ class MainWindow(QtWidgets.QMainWindow):
 
 
         # button connections
-        self.show_signal_pushButton.clicked.connect(lambda: self.show_sin_signal())
+        self.showsignal_pushButton.clicked.connect(lambda: self.show_sin_signal())
         self.addtosum_pushButton.clicked.connect(lambda: self.display_summed_sin_signals())
         self.delete_signal_btn.clicked.connect(lambda: self.remove_sin_signal())
         self.send_sampler_btn.clicked.connect(lambda: self.send_to_sampler())
@@ -116,7 +116,6 @@ class MainWindow(QtWidgets.QMainWindow):
             self.phase += 90
 
         self.signaldict[self.name] = self.magnitude, self.frequency, self.phase
-        self.sum_signals_combobox.addItem(self.name)
         self.sinusoidal = self.signalParameters(
             self.magnitude, self.frequency, self.phase)
         self.plot_sin_signal(self.canvas1, self.show_signal_graph,
@@ -127,7 +126,7 @@ class MainWindow(QtWidgets.QMainWindow):
 
     # Add the sinusoidals generated
     def display_summed_sin_signals(self):
-        
+        self.sum_signals_combobox.addItem(self.name)
         self.signal_sum += self.sinusoidal
         self.plot_sin_signal(self.canvas2, self.summation_graph,
                         self.layout2, self.signal_sum)
@@ -157,6 +156,7 @@ class MainWindow(QtWidgets.QMainWindow):
         self.canvas3.axes.clear()
         self.x_data = self.time
         self.y_data = self.signal_sum
+        
         self.plot_sin_signal(self.canvas3, self.sampled_graph, self.layout3, self.signal_sum)
 
 
