@@ -9,7 +9,11 @@ from scipy.interpolate import interp1d
 import pyqtgraph as pg
 from matplotlib.figure import Figure
 from PyQt5.QtCore import Qt
+<<<<<<< Updated upstream
 from PyQt5.QtWidgets import QFileDialog, QGraphicsScene ,QLabel , QHBoxLayout
+=======
+from PyQt5.QtWidgets import QFileDialog, QMessageBox, QGraphicsScene ,QLabel , QHBoxLayout
+>>>>>>> Stashed changes
 from matplotlib.backends.backend_qt5agg import FigureCanvasQTAgg
 from PyQt5 import QtWidgets, uic 
 from matplotlib.pyplot import figure
@@ -78,13 +82,15 @@ class MainWindow(QtWidgets.QMainWindow):
         self.layout5.addWidget(self.canvas5)
 
         #maping each signal with its variables
+        #store signal names as keys and corresponding signal parameters (magnitude, frequency, phase) as values.
         self.signaldict = dict()
         self.signal_sum = 0 #sum of the added sin signals
         self.sin_signal_list = []
 
         #setting the min and max values of the SNR value
-        self.SNR_slider.setMinimum(2)
-        self.SNR_slider.setMaximum(30)
+        self.SNR_slider.setMinimum(0)
+        self.SNR_slider.setMaximum(35)
+        self.SNR_slider.setValue(self.SNR_slider.maximum())
 
         # button connections
         self.showsignal_pushButton.clicked.connect(lambda: self.show_sin_signal())
@@ -97,10 +103,20 @@ class MainWindow(QtWidgets.QMainWindow):
         self.sample_rate_comboBox.activated.connect(lambda:self.plot(self.y_data))
         self.sample_rate_comboBox.currentIndexChanged.connect(self.update_slider_labels)
         self.freq_slider.valueChanged.connect(lambda: self.plotHSlide())
+<<<<<<< Updated upstream
         #self.add_noise_checkbox.stateChanged.connect(lambda : self.toggle_noise)
         #self.SNR_slider.valueChanged.connect(lambda: self.SNR_value_change)
 
         self.time = arange(0.0, 1.0, 0.001)
+=======
+        self.add_noise_checkbox.stateChanged.connect(lambda : self.toggle_noise)
+        self.SNR_slider.valueChanged.connect(lambda: self.SNR_value_change)
+        self.SNR_slider.valueChanged.connect(lambda: self.update_noise_level()) # faroooo7aaaasssssss 
+        self.time = arange(0.0, 2.0, 0.001)
+
+    def update_lcd_value(self):
+        self.lcd_freq.display(self.freq_slider.value())
+>>>>>>> Stashed changes
 
 
     # define signal using given parameters ex: magnitude*sin(omega*self.time + theta)
@@ -135,11 +151,15 @@ class MainWindow(QtWidgets.QMainWindow):
         self.magnitude = float(self.mag_lineEdit.text())
         self.frequency = float(self.freq_lineEdit.text())
         self.phase = float(self.phase_lineEdit.text())
+<<<<<<< Updated upstream
         self.name = (self.name_lineEdit.text())        
         if self.cos_radioButton.isChecked() == True: 
             #cosine wave will be drawn
             self.phase += 90
 
+=======
+        self.name = (self.name_lineEdit.text())
+>>>>>>> Stashed changes
         self.signaldict[self.name] = self.magnitude, self.frequency, self.phase
         self.sinusoidal = self.signalParameters(
             self.magnitude, self.frequency, self.phase)
@@ -151,30 +171,72 @@ class MainWindow(QtWidgets.QMainWindow):
 
     # Add the sinusoidals generated
     def display_summed_sin_signals(self):
-        
+        #temp_sum = self.signal_sum + self.sinusoidal
+        #self.sum_signals_combobox.addItem(self.name)
+        # Check if temp_sum is empty (all zeros)
+        #if any(temp_sum):
+            #self.signal_sum = temp_sum
+        #else:
+            # If temp_sum is empty, initialize self.signal_sum as a NumPy array
+            #self.signal_sum = np.zeros(2000)
+            
         self.signal_sum += self.sinusoidal
         self.sum_signals_combobox.addItem(self.name)
         self.plot_sin_signal(self.canvas2, self.summation_graph,
                         self.layout2, self.signal_sum)
         
-        
 
 
     # remove selected signal
     def remove_sin_signal(self):
-        #if it is the last signal to be removed from the combobox -> clear graph
-        if self.sum_signals_combobox.count() == 1:
-            self.signal_sum = [0]*(len(self.time))
+        if self.sum_signals_combobox.count() == 0:
+            warning = QMessageBox()
+            warning.setIcon(QMessageBox.Warning)
+            warning.setText("There are no more signals to delete.")
+            warning.exec_()
+        elif self.sum_signals_combobox.count() == 1:
+            self.signal_sum = []  # Empty list
             self.signaldict.clear()
             self.sum_signals_combobox.clear()
+            
         else:
+            #Removing signals when there's more than one signal
             index = self.sum_signals_combobox.currentIndex()
             self.get_data()
             self.sum_signals_combobox.removeItem(index)
             self.signal_sum -= self.signal
             self.signaldict.pop(self.signal_name, None)
-        self.plot_sin_signal(self.canvas2, self.summation_graph,
-                        self.layout2, self.signal_sum)
+        
+        # Only plot if there are signals in self.signal_sum
+        if any(self.signal_sum):
+            self.plot_sin_signal(self.canvas2, self.summation_graph, self.layout2, self.signal_sum)
+        else:
+            # Clear the graph if there are no signals
+            self.canvas2.axes.clear()
+            self.layout2.removeWidget(self.canvas2)
+        self.canvas2.draw()
+        
+            #NOISE by farooo7aaaaaa
+    def update_noise_level(self):
+        noise_level = self.SNR_slider.value()  # Get the current noise level from the slider
+        self.add_gaussian_noise(noise_level)
+    
+
+    # def add_noise_based_on_snr(self, snr_level):
+    #     # Calculate the signal power (you may need to adjust this based on your signal)
+    #     signal_power = np.mean(np.square(self.y_data))
+
+    #     # Calculate the desired noise power based on the SNR level
+    #     noise_power = signal_power / (10**(snr_level / 10))
+
+    #     # Generate Gaussian noise with the specified noise power
+    #     noise = np.random.normal(0, np.sqrt(noise_power), len(self.time))
+
+    #     # Add the noise to the signal
+    #     y_noisy = self.y_data + noise
+
+    #     # Plot the noisy signals
+    #     self.plot(y_noisy)
         
 
 
@@ -183,7 +245,13 @@ class MainWindow(QtWidgets.QMainWindow):
         self.canvas3.axes.clear()
         self.x_data = self.time
         self.y_data = self.signal_sum
-        self.plot_sin_signal(self.canvas3, self.sampled_graph, self.layout3, self.signal_sum)
+        max_freq = []
+        for i in self.signaldict: 
+            max_freq.append(self.signaldict[i][1])
+        self.maxFreq = max(max_freq)
+        self.main_layout.setCurrentWidget(self.sampler_tab)
+        self.plot(self.y_data)
+
 
 
     def load(self):
@@ -234,6 +302,13 @@ class MainWindow(QtWidgets.QMainWindow):
         else: #actual freq.
             self.freq_slider.setMaximum(60)
 
+<<<<<<< Updated upstream
+=======
+        # smapling the data and stored in variable contains both the resampled signal and its associated time values.
+        sample_data,sample_time = sig.resample(self.y_data, self.freq_slider.value(), self.x_data)
+        # # sampling the data and stored in variable contains both the resampled signal and its associated time values.
+        # resample_data = sig.resample(y_data, self.freq_slider.value(), self.x_data)
+>>>>>>> Stashed changes
         # sampling the data and stored in variable contains both the resampled signal and its associated time values.
         resample_data = sig.resample(y_data, self.freq_slider.value(), self.x_data)
 
@@ -255,6 +330,10 @@ class MainWindow(QtWidgets.QMainWindow):
         # plotting the original signal and the sampled data as dots 
         self.canvas3.axes.plot(self.x_data, y_data)
         self.canvas3.axes.scatter(sample_time, sample_data, color='k', s=10)
+<<<<<<< Updated upstream
+=======
+        self.canvas4.axes.legend([self.signal_name])  # Add a legend
+>>>>>>> Stashed changes
         self.canvas3.draw()
         self.sampled_graph.setCentralItem(self.graph)
         self.sampled_graph.setLayout(self.layout3)
@@ -270,12 +349,14 @@ class MainWindow(QtWidgets.QMainWindow):
         self.canvas5.draw()
         self.error_graph.setCentralItem(self.graph)
         self.error_graph.setLayout(self.layout5)
-    
+
+
+
     def sinc_interp(self, sample_data,sample_time , original_time):
 
         #It's important that the signal values and the corresponding time values have matching lengths for interpolation to be meaningful 
-        if len(sample_data) != len(sample_time):
-            raise ValueError('sample_data and sample_time must be the same length')
+        # if len(sample_data) != len(sample_time):
+        #     raise ValueError('sample_data and sample_time must be the same length')
 
         # Find the period that represents the time or distance between two consecutive samples.
 
@@ -303,6 +384,16 @@ class MainWindow(QtWidgets.QMainWindow):
             max_value = int(ceil(4 * self.maxFreq))
         else:
             max_value = 60
+<<<<<<< Updated upstream
+=======
+
+        self.min_slider_label.setText(f"Min: {min_value}")
+        self.max_slider_label.setText(f"Max: {max_value}")
+
+        # Update the slider's range
+        self.freq_slider.setMinimum(min_value)
+        self.freq_slider.setMaximum(max_value)
+>>>>>>> Stashed changes
 
         self.min_slider_label.setText(f"Min: {min_value}")
         self.max_slider_label.setText(f"Max: {max_value}")
@@ -312,37 +403,37 @@ class MainWindow(QtWidgets.QMainWindow):
         self.freq_slider.setMaximum(max_value)
 
 
-    # def toggle_noise(self):
-    #     self.noise_flag = not self.noise_flag  
-    #     self.add_gaussian_noise(self.y_data)
+    def toggle_noise(self):
+        self.noise_flag = not self.noise_flag  
+        self.add_gaussian_noise(self.y_data)
 
             
-    # def add_gaussian_noise(self,y_data):
-    #         #if the noise checkbox is true -> add noise to the signal
-    #         if self.noise_flag:
-    #             # Calculate the power of the signal -> computes the mean of the squared values of y_data.
-    #             signal_power = np.mean(np.square(y_data))
+    def add_gaussian_noise(self,y_data):
+            #if the noise checkbox is true -> add noise to the signal
+            if self.noise_flag:
+                # Calculate the power of the signal -> computes the mean of the squared values of y_data.
+                signal_power = np.mean(np.square(y_data))
 
-    #             # Calculate the desired noise power based on SNR
-    #             noise_power = signal_power / (10**(self.SNR_LVL / 10))
+                # Calculate the desired noise power based on SNR
+                noise_power = signal_power / (10**(self.SNR_LVL / 10))
 
-    #             # Generate white Gaussian noise
-    #             noise = np.random.normal(0, np.sqrt(noise_power), len(y_data))
+                # Generate white Gaussian noise
+                noise = np.random.normal(0, np.sqrt(noise_power), len(y_data))
 
-    #             # Add noise to the signal
-    #             y_noisy = y_data + noise
+                # Add noise to the signal
+                y_noisy = y_data + noise
 
-    #             #plotting the new noisy signal 
-    #             print (len(y_noisy), len(y_data))
-    #             self.plot (y_noisy)
+                #plotting the new noisy signal 
+                print (len(y_noisy), len(y_data))
+                self.plot (y_noisy)
 
-    #         #else draw the original data given (without noise)
-    #         else: self.plot(y_data)
+            #else draw the original data given (without noise)
+            else: self.plot(y_data)
 
 
-    # def SNR_value_change(self,):
-    #         self.SNR_LVL = self.SNR_slider.value()
-    #         self.add_gaussian_noise(self,self.y_data)
+    def SNR_value_change(self,):
+            self.SNR_LVL = self.SNR_slider.value()
+            self.add_gaussian_noise(self,self.y_data)
 
 
 
