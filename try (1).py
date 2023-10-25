@@ -99,7 +99,7 @@ class MainWindow(QtWidgets.QMainWindow):
         self.sample_rate_comboBox.addItem("Actual Frequency")
         self.sample_rate_comboBox.activated.connect(self.update_slider_labels)
         self.freq_slider.valueChanged.connect(lambda: self.plotHSlide())
-        self.freq_slider.valueChanged.connect(self.update_lcd_value)
+        self.freq_slider.valueChanged.connect(self.update_slider_labels)
        # self.add_noise_checkbox.stateChanged.connect(lambda : self.toggle_noise)
        # self.SNR_slider.valueChanged.connect(lambda: self.SNR_value_change)
        # self.add_noise_checkbox.stateChanged.connect(lambda : self.toggle_noise)
@@ -107,8 +107,6 @@ class MainWindow(QtWidgets.QMainWindow):
        # self.SNR_slider.valueChanged.connect(lambda: self.update_noise_level()) # faroooo7aaaasssssss 
         self.time = arange(0.0, 2.0, 0.001)
 
-    def update_lcd_value(self):
-        self.lcd_freq.display(self.freq_slider.value())
 
 
     # define signal using given parameters ex: magnitude*sin(omega*self.time + theta)
@@ -234,10 +232,7 @@ class MainWindow(QtWidgets.QMainWindow):
         self.canvas5.axes.clear()
         self.x_data = self.time
         self.y_data = self.signal_sum
-        max_freq = []
-        for i in self.signaldict: 
-            max_freq.append(self.signaldict[i][1])
-        self.maxFreq = max(max_freq)
+        self.maxFreq = self.get_fmax()
         self.main_layout.setCurrentWidget(self.sampler_tab)
         self.plot_graph(self.y_data)
 
@@ -263,8 +258,12 @@ class MainWindow(QtWidgets.QMainWindow):
             self.layout3.removeWidget(self.canvas3)
             self.layout4.removeWidget(self.canvas4)
             self.layout5.removeWidget(self.canvas5)
+        self.maxFreq = self.get_fmax()
+        self.loaded = True
+        self.plot_graph(self.y_data)
 
-        # Filtering
+    
+    def get_fmax(self):
         FTydata = np.fft.fft(self.y_data)
         # Keep only the first half of the FFT data (positive frequencies)
         FTydata = FTydata[0:int(len(self.y_data)/2)]
@@ -277,11 +276,7 @@ class MainWindow(QtWidgets.QMainWindow):
         self.fmaxtuble = np.where(FTydata > noise)
         #finds the index with the maximum value which represents the dominant frequency component in the signal
         self.maxFreq = max(self.fmaxtuble[0])
-        print(self.maxFreq)
-        self.loaded = True
-        self.plot_graph(self.y_data)
-
-    
+        return self.maxFreq
 
     def sinc_interp(self, sample_data,sample_time , original_time):
 
@@ -349,15 +344,17 @@ class MainWindow(QtWidgets.QMainWindow):
         self.canvas5.axes.clear()
         self.plot_graph(self.y_data)
 
-    def update_slider_labels(self):
+    def update_slider_labels(self,value):
+            # current_value = self.freq_slider.value()
             selected_option = self.sample_rate_comboBox.currentIndex()
             self.freq_slider.setMinimum(1)  # Set the minimum value of both cases
             if selected_option == 0 : # 0 corresponds to "Normalized Frequency"
                 self.freq_slider.setMaximum(int(4 * self.maxFreq))  # Set the maximum value in case 1       
-                self.sliderlabel.setText(f'Fmax={self.maxFreq}Hz')
+                self.sliderlabel.setText(f'Fmax= {self.maxFreq}Hz <br>{value//self.maxFreq}Fmax')
+                # self.sliderlabel.setText(f'Fmax={self.maxFreq}Hz')
             else:
                 self.freq_slider.setMaximum(60)
-                self.sliderlabel.setText(' Hz')
+                self.sliderlabel.setText(f'{value} Hz')
 
     # def toggle_noise(self):
     #     self.noise_flag = not self.noise_flag  

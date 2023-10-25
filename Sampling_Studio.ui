@@ -603,12 +603,19 @@ QScrollBar::right-arrow:horizontal {
                  </widget>
                 </item>
                 <item>
-                 <widget class="QLCDNumber" name="lcd_freq"/>
-                </item>
-                <item>
                  <widget class="QLabel" name="sliderlabel">
+                  <property name="font">
+                   <font>
+                    <pointsize>20</pointsize>
+                    <weight>75</weight>
+                    <bold>true</bold>
+                   </font>
+                  </property>
                   <property name="text">
                    <string/>
+                  </property>
+                  <property name="alignment">
+                   <set>Qt::AlignCenter</set>
                   </property>
                  </widget>
                 </item>
@@ -1181,22 +1188,5 @@ color:#34455e;
   </customwidget>
  </customwidgets>
  <resources/>
- <connections>
-  <connection>
-   <sender>freq_slider</sender>
-   <signal>valueChanged(int)</signal>
-   <receiver>lcd_freq</receiver>
-   <slot>display(int)</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>1033</x>
-     <y>706</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>1062</x>
-     <y>742</y>
-    </hint>
-   </hints>
-  </connection>
- </connections>
+ <connections/>
 </ui>
