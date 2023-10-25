@@ -449,7 +449,7 @@ QScrollBar::right-arrow:horizontal {
 </string>
       </property>
       <property name="currentIndex">
-       <number>1</number>
+       <number>0</number>
       </property>
       <widget class="QWidget" name="sampler_tab">
        <attribute name="title">
@@ -599,6 +599,16 @@ QScrollBar::right-arrow:horizontal {
                   </property>
                   <property name="orientation">
                    <enum>Qt::Horizontal</enum>
+                  </property>
+                 </widget>
+                </item>
+                <item>
+                 <widget class="QLCDNumber" name="lcd_freq"/>
+                </item>
+                <item>
+                 <widget class="QLabel" name="sliderlabel">
+                  <property name="text">
+                   <string/>
                   </property>
                  </widget>
                 </item>
@@ -1171,5 +1181,22 @@ color:#34455e;
   </customwidget>
  </customwidgets>
  <resources/>
- <connections/>
+ <connections>
+  <connection>
+   <sender>freq_slider</sender>
+   <signal>valueChanged(int)</signal>
+   <receiver>lcd_freq</receiver>
+   <slot>display(int)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>1033</x>
+     <y>706</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>1062</x>
+     <y>742</y>
+    </hint>
+   </hints>
+  </connection>
+ </connections>
 </ui>
