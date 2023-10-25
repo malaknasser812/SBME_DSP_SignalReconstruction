@@ -89,6 +89,12 @@ class MainWindow(QtWidgets.QMainWindow):
         self.SNR_slider.setMaximum(40)
         self.SNR_slider.setValue(self.SNR_slider.maximum())
 
+
+        #lineEdits connections
+        self.name_lineEdit.returnPressed.connect(self.name_lineEdit_returnPressed)
+        self.mag_lineEdit.returnPressed.connect(self.mag_lineEdit_returnPressed)
+        self.freq_lineEdit.returnPressed.connect(self.freq_lineEdit_returnPressed)
+
         # button connections
         self.showsignal_pushButton.clicked.connect(lambda: self.show_sin_signal())
         self.addtosum_pushButton.clicked.connect(lambda: self.display_summed_sin_signals())
@@ -108,7 +114,13 @@ class MainWindow(QtWidgets.QMainWindow):
         self.time = arange(0.0, 2.0, 0.001)
 
 
-
+    #make enter-click work to line edit 
+    def name_lineEdit_returnPressed(self):
+        self.mag_lineEdit.setFocus()
+    def mag_lineEdit_returnPressed(self):
+        self.freq_lineEdit.setFocus()
+    def freq_lineEdit_returnPressed(self):
+        self.phase_lineEdit.setFocus()
     # define signal using given parameters ex: magnitude*sin(omega*self.time + theta)
     def signalParameters(self, magnitude, frequency, phase):
         omega = 2*pi*frequency
