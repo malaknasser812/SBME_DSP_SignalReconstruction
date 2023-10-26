@@ -553,7 +553,7 @@ QScrollBar::right-arrow:horizontal {
                    </font>
                   </property>
                   <property name="text">
-                   <string>Sample Rate(Hz)</string>
+                   <string>Sample Rate</string>
                   </property>
                  </widget>
                 </item>
@@ -573,6 +573,13 @@ QScrollBar::right-arrow:horizontal {
                   </property>
                   <property name="styleSheet">
                    <string notr="true">border: 2px solid darkgray;</string>
+                  </property>
+                 </widget>
+                </item>
+                <item>
+                 <widget class="QLabel" name="currentvalue">
+                  <property name="text">
+                   <string/>
                   </property>
                  </widget>
                 </item>

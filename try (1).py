@@ -289,7 +289,7 @@ class MainWindow(QtWidgets.QMainWindow):
             selected_option = self.sample_rate_comboBox.currentIndex()
             #choosing normalized freq. so dependently of fmax
             if selected_option == 0 :
-                self.freq_slider.setMaximum(int(self.maxFreq*4))
+                self.freq_slider.setMaximum(int(4*self.maxFreq))
             else: #actual freq.
                 self.freq_slider.setMaximum(60)
 
@@ -343,10 +343,12 @@ class MainWindow(QtWidgets.QMainWindow):
             if selected_option == 0 : # 0 corresponds to "Normalized Frequency"
                 self.freq_slider.setMaximum(int(4 * self.maxFreq))  # Set the maximum value in case 1       
                 self.sliderlabel.setText(f'Fmax= {self.maxFreq / 2}Hz <br>{value//self.maxFreq}Fmax')
+                self.currentvalue.setText(f'CurrentValue = {value}Hz')
                 # self.sliderlabel.setText(f'Fmax={self.maxFreq}Hz')
             else:
                 self.freq_slider.setMaximum(60)
                 self.sliderlabel.setText(f'{value} Hz')
+                self.currentvalue.setText(f'CurrentValue = {value}Hz')
 
     
     def toggle_noise(self):
