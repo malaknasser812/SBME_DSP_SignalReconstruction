@@ -44,7 +44,6 @@ class MainWindow(QtWidgets.QMainWindow):
         self.frequency = 1
         self.phase = 0
         self.noise_flag = False
-        self.SNR_LVL = 1
 
         self.sinusoidal = 0
         self.signalSum = 0
@@ -57,6 +56,7 @@ class MainWindow(QtWidgets.QMainWindow):
         self.normFreq_index = 0
         self.y_data = []
         self.x_data = []
+        self.y_noisy = []
 
         self.canvas1 = MplCanvas(self, width=5, height=4, dpi=100)
         self.layout1 = QtWidgets.QVBoxLayout()
@@ -85,9 +85,9 @@ class MainWindow(QtWidgets.QMainWindow):
         self.sin_signal_list = []
 
         #setting the min and max values of the SNR value
-        self.SNR_slider.setMinimum(10)
-        self.SNR_slider.setMaximum(40)
-        self.SNR_slider.setValue(self.SNR_slider.maximum())
+        self.SNR_slider.setMinimum(2)
+        self.SNR_slider.setMaximum(30)
+        self.SNR_slider.setValue(2)
 
 
         #lineEdits connections
@@ -106,11 +106,8 @@ class MainWindow(QtWidgets.QMainWindow):
         self.sample_rate_comboBox.activated.connect(self.update_slider_labels)
         self.freq_slider.valueChanged.connect(lambda: self.plotHSlide())
         self.freq_slider.valueChanged.connect(self.update_slider_labels)
-       # self.add_noise_checkbox.stateChanged.connect(lambda : self.toggle_noise)
-       # self.SNR_slider.valueChanged.connect(lambda: self.SNR_value_change)
-       # self.add_noise_checkbox.stateChanged.connect(lambda : self.toggle_noise)
-        self.SNR_slider.valueChanged.connect(lambda: self.update_noise_level())
-       # self.SNR_slider.valueChanged.connect(lambda: self.update_noise_level()) # faroooo7aaaasssssss 
+        self.SNR_slider.valueChanged.connect(self.SNR_value_change)
+        self.add_noise_checkbox.stateChanged.connect(lambda : self.toggle_noise())
         self.time = arange(0.0, 2.0, 0.001)
 
 
@@ -211,29 +208,7 @@ class MainWindow(QtWidgets.QMainWindow):
         self.canvas2.draw()
         
             #NOISE by farooo7aaaaaa
-    def update_noise_level(self):
-        noise_level = self.SNR_slider.value()  # Get the current noise level from the slider
-        self.add_noise_based_on_snr(noise_level)
-    
-    # def SNR_value_change(self,):
-    #         self.SNR_LVL = self.SNR_slider.value()
-    #         self.add_gaussian_noise(self,self.y_data)
-
-    def add_noise_based_on_snr(self, snr_level):
-        # Calculate the signal power (you may need to adjust this based on your signal)
-        signal_power = np.mean(np.square(self.y_data))
-
-        # Calculate the desired noise power based on the SNR level
-        noise_power = signal_power / (10**(snr_level / 10)) #from db to watte 
-
-        # Generate Gaussian noise with the specified noise power
-        noise = np.random.normal(0, np.sqrt(noise_power), len(self.time))
-
-        # Add the noise to the signal
-        y_noisy = self.y_data + noise
-
-        # Plot the noisy signals
-        self.plot_graph(y_noisy)
+   
         
 
 
@@ -246,7 +221,7 @@ class MainWindow(QtWidgets.QMainWindow):
         self.y_data = self.signal_sum
         self.maxFreq = self.get_fmax()
         self.main_layout.setCurrentWidget(self.sampler_tab)
-        self.plot_graph(self.y_data)
+        self.plot_graph(self.signal_sum)
 
 
 
@@ -309,7 +284,8 @@ class MainWindow(QtWidgets.QMainWindow):
             return interpolated_data
     # make a function for plotting the noise and 
     # if value of
-    def plot_graph(self, y_data):
+    def plot_graph(self, y_data):           
+
             selected_option = self.sample_rate_comboBox.currentIndex()
             #choosing normalized freq. so dependently of fmax
             if selected_option == 0 :
@@ -354,7 +330,11 @@ class MainWindow(QtWidgets.QMainWindow):
         self.canvas3.axes.clear()
         self.canvas4.axes.clear()
         self.canvas5.axes.clear()
-        self.plot_graph(self.y_data)
+        if self.noise_flag:
+            self.plot_graph(self.y_noisy)
+        else:
+            self.plot_graph(self.y_data)
+
 
     def update_slider_labels(self,value):
             # current_value = self.freq_slider.value()
@@ -362,39 +342,55 @@ class MainWindow(QtWidgets.QMainWindow):
             self.freq_slider.setMinimum(1)  # Set the minimum value of both cases
             if selected_option == 0 : # 0 corresponds to "Normalized Frequency"
                 self.freq_slider.setMaximum(int(4 * self.maxFreq))  # Set the maximum value in case 1       
-                self.sliderlabel.setText(f'Fmax= {self.maxFreq}Hz <br>{value//self.maxFreq}Fmax')
+                self.sliderlabel.setText(f'Fmax= {self.maxFreq / 2}Hz <br>{value//self.maxFreq}Fmax')
                 # self.sliderlabel.setText(f'Fmax={self.maxFreq}Hz')
             else:
                 self.freq_slider.setMaximum(60)
                 self.sliderlabel.setText(f'{value} Hz')
 
-    # def toggle_noise(self):
-    #     self.noise_flag = not self.noise_flag  
-    #     self.add_gaussian_noise(self.y_data)
+    
+    def toggle_noise(self):
+        #toggle the noise Flag -> whether to add noise or not
+        self.noise_flag = not self.noise_flag 
+        self.add_gaussian_noise(self.y_data)
 
+    #When the SNR slider changes value
+    def SNR_value_change(self,):
+        self.add_gaussian_noise(self.y_data)
+    
+
+    #Adding Noise to the signal        
+    def add_gaussian_noise(self,y_data):
+        #if the noise checkbox is true -> add noise to the signal
+        if self.noise_flag:
+            # Calculate the power of the signal -> computes the mean of the squared values of y_data.
+            signal_power = np.mean(np.square(y_data))
+
+            # Calculate the desired noise power based on SNR
+            noise_power = signal_power / (10**(self.SNR_slider.value() / 10))
+
+            # Generate white Gaussian noise
+            noise = np.random.normal(0, np.sqrt(noise_power), len(y_data))
+
+            # Add noise to the signal
+            y_noisy = y_data + noise
             
-    # def add_gaussian_noise(self,y_data):
-    #         #if the noise checkbox is true -> add noise to the signal
-    #         if self.noise_flag:
-    #             # Calculate the power of the signal -> computes the mean of the squared values of y_data.
-    #             signal_power = np.mean(np.square(y_data))
+            # Plotting the new noisy signal 
+            self.canvas3.axes.cla()
+            self.canvas4.axes.cla()
+            self.canvas5.axes.cla()
+            self.y_noisy=y_noisy
+            self.plot_graph(y_noisy)
 
-    #             # Calculate the desired noise power based on SNR
-    #             noise_power = signal_power / (10**(self.SNR_LVL / 10))
+        # else draw the original data given (without noise)
+        else:
+            self.canvas3.axes.cla()
+            self.canvas4.axes.cla()
+            self.canvas5.axes.cla()
+            self.y = y_data
+            self.plot_graph(self.y_data)
 
-    #             # Generate white Gaussian noise
-    #             noise = np.random.normal(0, np.sqrt(noise_power), len(y_data))
-
-    #             # Add noise to the signal
-    #             y_noisy = y_data + noise
-
-    #             #plotting the new noisy signal 
-    #             print (len(y_noisy), len(y_data))
-    #             self.plot_graph (y_noisy)
-
-    #         #else draw the original data given (without noise)
-    #         else: self.plot_graph(y_data)
-
+    
 def main():
     app = QtWidgets.QApplication(sys.argv)
     main = MainWindow()
