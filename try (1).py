@@ -1,6 +1,7 @@
 from scipy.fft import fft
 import scipy.signal as sig
 from scipy import interpolate
+from scipy import signal
 import numpy as np
 import pandas as pd
 import pyqtgraph as pg
@@ -108,7 +109,7 @@ class MainWindow(QtWidgets.QMainWindow):
         self.freq_slider.valueChanged.connect(self.update_slider_labels)
         self.SNR_slider.valueChanged.connect(self.SNR_value_change)
         self.add_noise_checkbox.stateChanged.connect(lambda : self.toggle_noise())
-        self.time = arange(0.0, 2.0, 0.001)
+        self.time = arange(0.0, 1.0, 0.001)
 
 
     #make enter-click work to line edit 
@@ -150,7 +151,7 @@ class MainWindow(QtWidgets.QMainWindow):
         self.magnitude = float(self.mag_lineEdit.text())
         self.frequency = float(self.freq_lineEdit.text())
         self.phase = float(self.phase_lineEdit.text())
-        self.name = (self.name_lineEdit.text())
+        self.name = self.name_lineEdit.text()
         self.signaldict[self.name] = self.magnitude, self.frequency, self.phase
         self.sinusoidal = self.signalParameters(
             self.magnitude, self.frequency, self.phase)
@@ -161,16 +162,7 @@ class MainWindow(QtWidgets.QMainWindow):
 
 
     # Add the sinusoidals generated
-    def display_summed_sin_signals(self):
-        #temp_sum = self.signal_sum + self.sinusoidal
-        #self.sum_signals_combobox.addItem(self.name)
-        # Check if temp_sum is empty (all zeros)
-        #if any(temp_sum):
-            #self.signal_sum = temp_sum
-        #else:
-            # If temp_sum is empty, initialize self.signal_sum as a NumPy array
-            #self.signal_sum = np.zeros(2000)
-            
+    def display_summed_sin_signals(self):    
         self.signal_sum += self.sinusoidal
         self.sum_signals_combobox.addItem(self.name)
         self.plot_sin_signal(self.canvas2, self.summation_graph,
@@ -208,23 +200,25 @@ class MainWindow(QtWidgets.QMainWindow):
         self.canvas2.draw()
         
             #NOISE by farooo7aaaaaa
-   
+
         
 
 
-    # send the signal to the sampler view
+    #send the signal to the sampler view
     def send_to_sampler (self):
         self.canvas3.axes.clear()
         self.canvas4.axes.clear()
         self.canvas5.axes.clear()
         self.x_data = self.time
         self.y_data = self.signal_sum
-        self.maxFreq = self.get_fmax()
+        max_freq = [self.signaldict[i][1] for i in self.signaldict]
+        self.maxFreq = max(max_freq)
         self.main_layout.setCurrentWidget(self.sampler_tab)
         self.plot_graph(self.signal_sum)
 
 
 
+# loading biological signal 
     def load(self):
         # Clear the plots in canvas3 , canvas4 and canvas5
         self.canvas3.axes.clear()
@@ -245,25 +239,19 @@ class MainWindow(QtWidgets.QMainWindow):
             self.layout3.removeWidget(self.canvas3)
             self.layout4.removeWidget(self.canvas4)
             self.layout5.removeWidget(self.canvas5)
-        self.maxFreq = self.get_fmax()
+        Period = self.x_data[1]-self.x_data[0]
+        self.maxFreq = int(self.get_fmax(Period))
         self.loaded = True
         self.plot_graph(self.y_data)
 
-    
-    def get_fmax(self):
+    def get_fmax(self,Period):
         FTydata = np.fft.fft(self.y_data)
-        # Keep only the first half of the FFT data (positive frequencies)
-        FTydata = FTydata[0:int(len(self.y_data)/2)]
-        FTydata = abs(FTydata)
-        # Find the maximum amplitude in the FFT data
-        maxamp = max(FTydata)
-        #A noise threshold is defined as 1% of the maximum amp. used to identify significant frequency components above the noise level.
-        noise = (maxamp/100)
-        #finds the indices where the FFT values are significant(more than noise threshold) and not considered noise.
-        self.fmaxtuble = np.where(FTydata > noise)
-        #finds the index with the maximum value which represents the dominant frequency component in the signal
-        self.maxFreq = max(self.fmaxtuble[0])
+        #calculate frequencies corresponding to the FFt ydata
+        freq = np.fft.fftfreq(len(FTydata),Period)
+        #find and return max freq value 
+        self.maxFreq = max(freq)
         return self.maxFreq
+    
 
     def sinc_interp(self, sample_data,sample_time , original_time):
 
@@ -342,7 +330,7 @@ class MainWindow(QtWidgets.QMainWindow):
             self.freq_slider.setMinimum(1)  # Set the minimum value of both cases
             if selected_option == 0 : # 0 corresponds to "Normalized Frequency"
                 self.freq_slider.setMaximum(int(4 * self.maxFreq))  # Set the maximum value in case 1       
-                self.sliderlabel.setText(f'Fmax= {self.maxFreq / 2}Hz <br>{value//self.maxFreq}Fmax')
+                self.sliderlabel.setText(f'Fmax= {self.maxFreq }Hz <br>{value//self.maxFreq}Fmax')
                 self.currentvalue.setText(f'CurrentValue = {value}Hz')
                 # self.sliderlabel.setText(f'Fmax={self.maxFreq}Hz')
             else:

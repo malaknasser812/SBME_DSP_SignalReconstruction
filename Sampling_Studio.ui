@@ -558,6 +558,13 @@ QScrollBar::right-arrow:horizontal {
                  </widget>
                 </item>
                 <item>
+                 <widget class="QLabel" name="currentvalue">
+                  <property name="text">
+                   <string/>
+                  </property>
+                 </widget>
+                </item>
+                <item>
                  <widget class="QComboBox" name="sample_rate_comboBox">
                   <property name="minimumSize">
                    <size>
@@ -573,13 +580,6 @@ QScrollBar::right-arrow:horizontal {
                   </property>
                   <property name="styleSheet">
                    <string notr="true">border: 2px solid darkgray;</string>
-                  </property>
-                 </widget>
-                </item>
-                <item>
-                 <widget class="QLabel" name="currentvalue">
-                  <property name="text">
-                   <string/>
                   </property>
                  </widget>
                 </item>
