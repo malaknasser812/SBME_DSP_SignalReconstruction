@@ -5,7 +5,6 @@ Ph.D Tamer Basha
 for third year (first semester)
 Date: 28/10/2023
 Contributors:
-Name- Sec- BN
 - Camellia Marwan
 - Hager Samir
 - Farah Ossama
