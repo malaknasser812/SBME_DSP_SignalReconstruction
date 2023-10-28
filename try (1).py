@@ -130,7 +130,12 @@ class MainWindow(QtWidgets.QMainWindow):
     # get the required data for each selected signal
     def get_data (self):
         self.signal_name = self.sum_signals_combobox.currentText()
+
+        # Retrieve the corresponding index list for the selected signal name from a dictionary.
         self.indexList = self.signaldict[self.signal_name]
+
+        # Create an instance of the 'signalParameters' class, passing the index values from the indexList.
+        # This will fetch the required data associated with the selected signal.
         self.signal = self.signalParameters(
             self.indexList[0], self.indexList[1], self.indexList[2])
 
@@ -152,18 +157,25 @@ class MainWindow(QtWidgets.QMainWindow):
         self.frequency = float(self.freq_lineEdit.text())
         self.phase = float(self.phase_lineEdit.text())
         self.name = self.name_lineEdit.text()
+
+        # Store the signal's properties (magnitude, frequency, phase) in a dictionary using its name as the key.
         self.signaldict[self.name] = self.magnitude, self.frequency, self.phase
+
+        # Create an instance of the 'signalParameters' class with the specified signal properties.
         self.sinusoidal = self.signalParameters(
             self.magnitude, self.frequency, self.phase)
+        
         self.plot_sin_signal(self.canvas1, self.show_signal_graph,
                         self.layout1, self.sinusoidal)
         
 
 
-
     # Add the sinusoidals generated
-    def display_summed_sin_signals(self):    
+    def display_summed_sin_signals(self):
+        # Add the current sinusoidal signal to the cumulative sum.    
         self.signal_sum += self.sinusoidal
+
+        # Add the name of the current sinusoidal signal to the combobox for selection.
         self.sum_signals_combobox.addItem(self.name)
         self.plot_sin_signal(self.canvas2, self.summation_graph,
                         self.layout2, self.signal_sum)
@@ -173,12 +185,16 @@ class MainWindow(QtWidgets.QMainWindow):
     # remove selected signal
     def remove_sin_signal(self):
         if self.sum_signals_combobox.count() == 0:
+
+            # Show a warning message when the user clicks on delete and there are no signals left
             warning = QMessageBox()
             warning.setIcon(QMessageBox.Warning)
             warning.setText("There are no more signals to delete.")
             warning.exec_()
+
         elif self.sum_signals_combobox.count() == 1:
-            self.signal_sum = []  # Empty list
+            # Clear the signal_sum (make it an empty list), clear the signaldict, and clear the combobox.
+            self.signal_sum = []  
             self.signaldict.clear()
             self.sum_signals_combobox.clear()
             
@@ -187,7 +203,11 @@ class MainWindow(QtWidgets.QMainWindow):
             index = self.sum_signals_combobox.currentIndex()
             self.get_data()
             self.sum_signals_combobox.removeItem(index)
+
+            # Subtract the selected signal from the cumulative sum.
             self.signal_sum -= self.signal
+
+            # Remove the selected signal's entry from the signaldict.
             self.signaldict.pop(self.signal_name, None)
         
         # Only plot if there are signals in self.signal_sum
@@ -199,10 +219,8 @@ class MainWindow(QtWidgets.QMainWindow):
             self.layout2.removeWidget(self.canvas2)
         self.canvas2.draw()
         
-            #NOISE by farooo7aaaaaa
 
         
-
 
     #send the signal to the sampler view
     def send_to_sampler (self):
@@ -211,8 +229,12 @@ class MainWindow(QtWidgets.QMainWindow):
         self.canvas5.axes.clear()
         self.x_data = self.time
         self.y_data = self.signal_sum
+
+        # Find the maximum frequency among all signals in the signaldict.
         max_freq = [self.signaldict[i][1] for i in self.signaldict]
         self.maxFreq = max(max_freq)
+
+        # Switch the current view to the sampler_tab in the main_layout.
         self.main_layout.setCurrentWidget(self.sampler_tab)
         self.plot_graph(self.signal_sum)
 
