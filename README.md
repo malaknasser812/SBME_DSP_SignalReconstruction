@@ -4,7 +4,7 @@ Course: Digital Signal Processing
 Ph.D Tamer Basha
 for third year (first semester)
 Date: 28/10/2023
-Contributors:
+- **Contributors**:
 - Camellia Marwan
 - Hager Samir
 - Farah Ossama
