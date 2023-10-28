@@ -86,9 +86,9 @@ class MainWindow(QtWidgets.QMainWindow):
         self.sin_signal_list = []
 
         #setting the min and max values of the SNR value
-        self.SNR_slider.setMinimum(2)
+        self.SNR_slider.setMinimum(1)
         self.SNR_slider.setMaximum(30)
-        self.SNR_slider.setValue(2)
+        self.SNR_slider.setValue(1)
 
 
         #lineEdits connections
