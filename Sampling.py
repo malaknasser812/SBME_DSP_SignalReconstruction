@@ -231,7 +231,7 @@ class MainWindow(QtWidgets.QMainWindow):
         path1 = self.fname1[0]
         data1 = pd.read_csv(path1)
         # Extract signal data (Y) and time data (X) from the CSV file for first 900 rows only 
-        self.y_data = data1.values[:900, 5]
+        self.y_data = data1.values[:900, -1]
         self.x_data = data1.values[:900, 0]
         # Set the value of the horizontal slider initially to its minimum value
         self.freq_slider.setValue(self.freq_slider.minimum())
