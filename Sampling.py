@@ -109,7 +109,7 @@ class MainWindow(QtWidgets.QMainWindow):
         self.freq_slider.valueChanged.connect(self.update_slider_labels)
         self.SNR_slider.valueChanged.connect(self.SNR_value_change)
         self.add_noise_checkbox.stateChanged.connect(lambda : self.toggle_noise())
-        self.time = arange(0.0, 1.0, 0.001)
+        self.time = arange(0.0, 1.0, 0.002)
 
 
     #make enter-click work to line edit 
@@ -251,9 +251,11 @@ class MainWindow(QtWidgets.QMainWindow):
             None, "Select a file...", os.getenv('HOME'), filter="All files (*)")
         path1 = self.fname1[0]
         data1 = pd.read_csv(path1)
+        # for i in len(data1)
+        #      if data1
         # Extract signal data (Y) and time data (X) from the CSV file
-        self.y_data = data1.values[:, 1]
-        self.x_data = data1.values[:, 0]
+        self.y_data = data1.values[:1000, 5]
+        self.x_data = data1.values[:1000, 0]
         # Set the value of the horizontal slider initially to its minimum value
         self.freq_slider.setValue(self.freq_slider.minimum())
         # If data is already loaded, remove canvas3 and canvas4 from their layouts
@@ -262,17 +264,18 @@ class MainWindow(QtWidgets.QMainWindow):
             self.layout4.removeWidget(self.canvas4)
             self.layout5.removeWidget(self.canvas5)
         Period = self.x_data[1]-self.x_data[0]
-        self.maxFreq = int(self.get_fmax(Period))
+        # self.maxFreq = int(self.get_fmax(Period))
+        self.maxFreq = 62.5
         self.loaded = True
         self.plot_graph(self.y_data)
 
-    def get_fmax(self,Period):
-        FTydata = np.fft.fft(self.y_data)
-        #calculate frequencies corresponding to the FFt ydata
-        freq = np.fft.fftfreq(len(FTydata),Period)
-        #find and return max freq value 
-        self.maxFreq = max(freq)
-        return self.maxFreq
+    # def get_fmax(self,Period):
+    #     FTydata = np.fft.fft(self.y_data)
+    #     #calculate frequencies corresponding to the FFt ydata
+    #     freq = np.fft.fftfreq(len(FTydata),Period)
+    #     #find and return max freq value 
+    #     self.maxFreq = max(freq)
+    #     return self.maxFreq
     
 
     def sinc_interp(self, sample_data,sample_time , original_time):
@@ -295,7 +298,12 @@ class MainWindow(QtWidgets.QMainWindow):
     # make a function for plotting the noise and 
     # if value of
     def plot_graph(self, y_data):           
-
+            # if self.noise_flag:
+            #     self.y_data = y_data
+            #     y_data= self.add_gaussian_noise()
+            # else:
+            #     y_data = y_data
+            #     # y_data=y_data
             selected_option = self.sample_rate_comboBox.currentIndex()
             #choosing normalized freq. so dependently of fmax
             if selected_option == 0 :
@@ -304,7 +312,7 @@ class MainWindow(QtWidgets.QMainWindow):
                 self.freq_slider.setMaximum(60)
 
             # smapling the data and stored in variable contains both the resampled signal and its associated time values.
-            sample_data, _ = sig.resample(y_data, self.freq_slider.value(), self.x_data) 
+            sample_data, _ = sig.resample(y_data, (self.freq_slider.value())*2, self.x_data) 
             # Ensure that sample_data and sample_time have the same length
             sample_time = np.linspace(self.x_data[0], self.x_data[-1], len(sample_data))
 
@@ -352,7 +360,7 @@ class MainWindow(QtWidgets.QMainWindow):
             self.freq_slider.setMinimum(1)  # Set the minimum value of both cases
             if selected_option == 0 : # 0 corresponds to "Normalized Frequency"
                 self.freq_slider.setMaximum(int(4 * self.maxFreq))  # Set the maximum value in case 1       
-                self.sliderlabel.setText(f'Fmax= {self.maxFreq }Hz <br>{value//self.maxFreq}Fmax')
+                self.sliderlabel.setText(f'Fmax= {self.maxFreq }Hz <br>{round(float(value/self.maxFreq),1)}Fmax')
                 self.currentvalue.setText(f'CurrentValue = {value}Hz')
                 # self.sliderlabel.setText(f'Fmax={self.maxFreq}Hz')
             else:
@@ -392,7 +400,8 @@ class MainWindow(QtWidgets.QMainWindow):
             self.canvas4.axes.cla()
             self.canvas5.axes.cla()
             self.y_noisy=y_noisy
-            self.plot_graph(y_noisy)
+            return y_noisy
+            # self.plot_graph(y_noisy)
 
         # else draw the original data given (without noise)
         else:
@@ -400,7 +409,8 @@ class MainWindow(QtWidgets.QMainWindow):
             self.canvas4.axes.cla()
             self.canvas5.axes.cla()
             self.y = y_data
-            self.plot_graph(self.y_data)
+            return y_data
+            # self.plot_graph(self.y_data)
 
     
 def main():
