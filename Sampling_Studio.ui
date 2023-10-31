@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>1359</width>
-    <height>843</height>
+    <height>846</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -553,12 +553,17 @@ QScrollBar::right-arrow:horizontal {
                    </font>
                   </property>
                   <property name="text">
-                   <string>Sample Rate</string>
+                   <string>Sample Rate :</string>
                   </property>
                  </widget>
                 </item>
                 <item>
                  <widget class="QLabel" name="currentvalue">
+                  <property name="font">
+                   <font>
+                    <pointsize>12</pointsize>
+                   </font>
+                  </property>
                   <property name="text">
                    <string/>
                   </property>

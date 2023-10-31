@@ -108,11 +108,11 @@ class MainWindow(QtWidgets.QMainWindow):
         self.freq_slider.valueChanged.connect(self.update_slider_labels)
         self.SNR_slider.valueChanged.connect(self.SNR_value_change)
         self.add_noise_checkbox.stateChanged.connect(lambda : self.toggle_noise())
-        self.time = arange(0.0, 1.0, 0.004)
+        self.time = arange(0.0, 2.0, 0.005)
 
 
     #make enter-click work to line edit 
-    def name_lineEdit_returnPressed(self):
+    def name_lineEdit_returnPressed(self):      
         self.mag_lineEdit.setFocus()
     def mag_lineEdit_returnPressed(self):
         self.freq_lineEdit.setFocus()
@@ -240,7 +240,7 @@ class MainWindow(QtWidgets.QMainWindow):
             self.layout3.removeWidget(self.canvas3)
             self.layout4.removeWidget(self.canvas4)
             self.layout5.removeWidget(self.canvas5)
-        Period = self.x_data[1]-self.x_data[0]
+        # Period = self.x_data[1]-self.x_data[0]
         # self.Fmaxreq = int(self.get_fmax(Period))
         self.Fmaxreq = 62.5
         self.loaded = True
@@ -265,7 +265,7 @@ class MainWindow(QtWidgets.QMainWindow):
                 T = 1 
             # converting to 2D array In signal processing and interpolation, 
             # working with 2D arrays (matrices) often allows for more efficient and vectorized computations
-            sincM = np.tile(original_time, (len(sample_time), 1)) - np.tile(sample_time[:, np.newaxis], (1, len(original_time)))
+            sincM = np.tile(original_time, (len(sample_time), 1)) - np.tile(sample_time[:, np.newaxis], (1, len(original_time))) #shape (len(sample_time),len(original_time))
             #calculates a weighted sum of the resampled data x using the sinc function values
             interpolated_data = np.dot(sample_data, np.sinc(sincM/T))
             return interpolated_data
