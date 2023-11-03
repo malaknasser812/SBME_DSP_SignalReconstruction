@@ -125,6 +125,7 @@ class MainWindow(QtWidgets.QMainWindow):
         return magnitude*sin(omega*self.time + theta)
 
 
+
     # get the required data for each selected signal
     def get_data (self):
         self.signal_name = self.sum_signals_combobox.currentText()
@@ -277,12 +278,14 @@ class MainWindow(QtWidgets.QMainWindow):
             #choosing normalized freq. so dependently of fmax
             if selected_option == 0 :
                 self.freq_slider.setMaximum(int(4*self.Fmaxreq))
+                self.freq_slider.setMinimum(1)
             else: #actual freq.
                 self.freq_slider.setMaximum(60)
+                self.freq_slider.setMinimum(1)
             # smapling the data and stored in variable contains both the resampled signal and its associated time values.
-            sample_data, _ = sig.resample(y_data, (self.freq_slider.value())*4, self.x_data) 
+            sample_data, _ = sig.resample(y_data, (self.freq_slider.value()), self.x_data) 
             # Ensure that sample_data and sample_time have the same length
-            sample_time = np.linspace(self.x_data[0], self.x_data[-1], len(sample_data))
+            sample_time = arange(self.x_data[0], self.x_data[-1], 1/self.freq_slider.value())
             # Perform interpolation to estimate the sampled data
             f = interpolate.interp1d(self.x_data, y_data, kind='linear')
             sample_data = f(sample_time)
