@@ -283,17 +283,17 @@ class MainWindow(QtWidgets.QMainWindow):
                 self.freq_slider.setMaximum(60)
                 self.freq_slider.setMinimum(1)
             # smapling the data and stored in variable contains both the resampled signal and its associated time values.
-            sample_data, _ = sig.resample(self.y_data, (self.freq_slider.value()), self.x_data) 
+            sample_data, _ = sig.resample(y_data, (self.freq_slider.value()), self.x_data) 
             # Ensure that sample_data and sample_time have the same length
             sample_time = arange(self.x_data[0], self.x_data[-1], 1/self.freq_slider.value())
             # Perform interpolation to estimate the sampled data
-            f = interpolate.interp1d(self.x_data, self.y_data, kind='linear')
+            f = interpolate.interp1d(self.x_data, y_data, kind='linear')
             sample_data = f(sample_time)
             #interpolatng on the new data 
             recontructed_data = self.sinc_interp(sample_data, sample_time, self.x_data)
             # Calculate the error between the original signal and the reconstructed signal
             if self.noise_flag:
-                error = self.y_noisy - recontructed_data
+                error = self.y_data - recontructed_data
             else:
                 error = y_data - recontructed_data
             # plotting the original signal and the sampled data as dots 
