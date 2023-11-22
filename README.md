@@ -1,9 +1,4 @@
 # SBME_DSP_SignalReconstruction
-- **Contributors**:
-- Camellia Marwan
-- Hager Samir
-- Farah Ossama
-- Malak Nasser
 
 ## **Introduction** :-
 This PyQt-powered application serves as a **sampling studio**. A desktop application that illustrates the signal sampling and recovery, showing the importance and validation of the Nyquist rate, as well as adding Gaussian noise so you can see its immediate effect on the recovered signal
