@@ -1,9 +1,4 @@
 # SBME_DSP_SignalReconstruction
-## Task info
-Course: Digital Signal Processing
-Ph.D Tamer Basha
-for third year (first semester)
-Date: 28/10/2023
 - **Contributors**:
 - Camellia Marwan
 - Hager Samir
